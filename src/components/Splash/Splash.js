@@ -1,19 +1,22 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, StatusBar } from "react-native";
+import { View, Image, StyleSheet, StatusBar } from "react-native";
 import Footer from "../Footer/Footer";
 
 export default class Splash extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { };
   }
 
   render() {
     return (
       <View style={styles.splashContainer}>
-        <StatusBar translucent/>
+        <StatusBar translucent />
         <View style={styles.mainTitle}>
-          <Text style={styles.splashText}>OS TRIO&#8482;</Text>
+          <Image
+            source={require("../../images/logo.png")}
+            style={{ height: 50, width: 200 }}
+          />
         </View>
         <Footer/>
       </View>
@@ -24,7 +27,7 @@ export default class Splash extends Component {
 const styles = StyleSheet.create({
   splashContainer: {
     flex: 1,
-    backgroundColor: "#171717",
+    backgroundColor: global.backgroundColor,
     justifyContent: "center",
     alignItems: "center"
   },

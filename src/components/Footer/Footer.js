@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   footNote: {
-    color: "#FFFFFF",
+    color: global.foregroundColor,
     fontSize: 10,
     fontWeight: "100",
     justifyContent: "center",

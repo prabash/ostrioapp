@@ -1,18 +1,27 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Image, StatusBar } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  StatusBar,
+  Image
+} from "react-native";
+import { Icon } from "native-base";
+import { onSignIn } from "../../Global/Auth";
 
 import Footer from "../Footer/Footer";
-import LoginForm from "../LoginForm/LoginForm";
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
   }
-  
+
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar translucent/>
+        <StatusBar translucent />
         <View style={styles.logoContainer}>
           <Image
             style={styles.logo}
@@ -20,7 +29,49 @@ export default class Login extends Component {
           />
         </View>
         <View style={styles.formContainer}>
-          <LoginForm />
+          <View style={styles.loginFormContainer}>
+            <StatusBar barStyle="light-content" />
+            <View style={styles.inputContainer}>
+              <Icon name="user" type="EvilIcons" style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Username"
+                placeholderTextColor={global.foregroundColor}
+                returnKeyType="next"
+                onSubmitEditing={() => this.passwordInput.focus()}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Icon name="lock" type="EvilIcons" style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor={global.foregroundColor}
+                secureTextEntry
+                returnKeyType="go"
+                ref={input => (this.passwordInput = input)}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.signInBtnContainer}
+              onPress={() => {
+                onSignIn().then(() =>
+                  this.props.navigation.navigate("SignedIn")
+                );
+              }}
+            >
+              <Text style={styles.signInBtnText}>SIGN IN</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.fgtPasswordContainer}
+              onPress={() => this.props.navigation.navigate("ForgotPassword")}
+            >
+              <Text style={styles.fgtPasswordText}>Forgot Password?</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <Footer />
       </View>
@@ -31,7 +82,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(17, 17, 17, 1.0)"
+    backgroundColor: global.backgroundColor
   },
   logoContainer: {
     alignItems: "center",
@@ -39,10 +90,57 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   logo: {
-    width: 100,
-    height: 100
+    width: 160,
+    height: 40
   },
   formContainer: {
     flexGrow: 2
+  },
+  loginFormContainer: {
+    flex: 1,
+    backgroundColor: global.backgroundColor,
+    padding: 20
+  },
+  inputContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: global.accentColor,
+    borderWidth: 1,
+    borderRadius: 100,
+    paddingLeft: 10,
+    marginBottom: 10,
+    height: 40
+  },
+  inputIcon: {
+    paddingLeft: 5,
+    color: global.foregroundColor
+  },
+  input: {
+    flex: 1,
+    color: global.foregroundColor,
+    paddingLeft: 5
+  },
+  signInBtnContainer: {
+    backgroundColor: global.accentColor,
+    height: 40,
+    alignContent: "center",
+    justifyContent: "center",
+    borderRadius: 100,
+    marginBottom: 10
+  },
+  signInBtnText: {
+    textAlign: "center",
+    color: global.foregroundColor,
+    fontSize: 16,
+    fontWeight: "200"
+  },
+  fgtPasswordContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end"
+  },
+  fgtPasswordText: {
+    color: global.foregroundColor,
+    fontWeight: "100"
   }
 });

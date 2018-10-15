@@ -8,14 +8,13 @@ import {
   StatusBar
 } from "react-native";
 import { Header, Left, Icon, Body, Title, Right, Badge } from "native-base";
-import { createStackNavigator } from 'react-navigation';
-
+import { onSignOut } from "../../Global/Auth";
 
 export default class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      themeColor: "rgba(254, 164, 127,1.0)"
+      themeColor: global.themeColor
     };
   }
 
@@ -33,28 +32,6 @@ export default class HomePage extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header
-          style={[styles.header, { backgroundColor: this.state.themeColor }]}
-          androidStatusBarColor={this.state.themeColor}
-        >
-          <Left style={{ flex: 1, justifyContent: "flex-start" }}>
-            <Icon
-              ios="ios-menu"
-              android="md-menu"
-              onPress={() => this.props.navigation.openDrawer()}
-            />
-          </Left>
-          <Body
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Image
-              style={styles.logo}
-              source={require("../../images/logo.png")}
-            />
-          </Body>
-          <Right style={{ flex: 1 }} />
-        </Header>
-
         <View style={styles.profileHeader}>
           <View style={styles.profileHeaderContent}>
             <Image
@@ -115,7 +92,14 @@ export default class HomePage extends Component {
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionContainer}>
+          <TouchableOpacity
+            style={styles.optionContainer}
+            onPress={() => {
+              onSignOut().then(() =>
+                this.props.navigation.navigate("SignedOut")
+              );
+            }}
+          >
             <Icon
               name="logout"
               type="SimpleLineIcons"
@@ -140,8 +124,8 @@ const styles = StyleSheet.create({
     color: "black"
   },
   logo: {
-    width: 50,
-    height: 50
+    width: 100,
+    height: 28
   },
   profileHeader: {
     flex: 1,
