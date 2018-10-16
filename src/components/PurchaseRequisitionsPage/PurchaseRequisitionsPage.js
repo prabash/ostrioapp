@@ -10,7 +10,7 @@ import {
 import { Header, Left, Icon, Body, Title, Right, Badge } from "native-base";
 import { onSignOut } from "../../Global/Auth";
 
-export default class HomePage extends Component {
+export default class PurchaseRequisitionsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -54,7 +54,10 @@ export default class HomePage extends Component {
             />
             <Text style={styles.optionText}>HOME</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionContainer}>
+          <TouchableOpacity 
+            style={styles.optionContainer}
+            onPress={() => this.props.navigation.navigate("PendingApprovals")}
+            >
             <Icon
               name="clock"
               type="SimpleLineIcons"
@@ -69,7 +72,10 @@ export default class HomePage extends Component {
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionContainer}>
+          <TouchableOpacity 
+            style={styles.optionContainer}
+            onPress={() => this.props.navigation.navigate("AllApprovals")}
+            >
             <Icon
               name="list"
               type="SimpleLineIcons"

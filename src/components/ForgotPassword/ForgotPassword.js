@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Icon } from "native-base";
 import Footer from "../Footer/Footer";
-import ForgotPasswordForm from "../ForgotPasswordForm/ForgotPasswordForm";
 
 export default class ForgotPassword extends Component {
   constructor(props) {

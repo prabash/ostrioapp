@@ -8,6 +8,10 @@ export default class Splash extends Component {
     this.state = { };
   }
 
+  componentDidMount() {
+    this.props.navigation.navigate("Login")
+  }
+
   render() {
     return (
       <View style={styles.splashContainer}>

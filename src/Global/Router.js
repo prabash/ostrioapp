@@ -4,10 +4,14 @@ import { StyleSheet, View, Text } from "react-native";
 import { createStackNavigator, createSwitchNavigator } from "react-navigation";
 import Login from "../components/Login/Login";
 import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
-import HomePage from "../components/HomePage/HomePage";
+import PurchaseRequisitionsPage from "../components/PurchaseRequisitionsPage/PurchaseRequisitionsPage";
+import Splash from "../components/Splash/Splash";
+import PendingApprovals from "../components/PendingApprovals/PendingApprovals";
+import AllApprovals from "../components/AllApprovals/AllApprovals";
 
 export const SignedOut = createStackNavigator(
   {
+    Splash: Splash,
     Login: Login,
     ForgotPassword: ForgotPassword
   },
@@ -22,11 +26,23 @@ export const SignedOut = createStackNavigator(
 export const SignedIn = createStackNavigator(
   {
     Home: {
-      screen: HomePage,
+      screen: PurchaseRequisitionsPage,
       navigationOptions: {
-        tabBarLabel: "Home",
+        tabBarLabel: "Purchase Requisitons",
       }
-    }
+    },
+    PendingApprovals : {
+      screen : PendingApprovals,
+      navigationOptions: {
+        tabBarLabel: "Pending Approvals",
+      }
+    },
+    AllApprovals : {
+      screen : AllApprovals,
+      navigationOptions: {
+        tabBarLabel: "All Approvals",
+      }
+    },
   },
   {
     headerMode: "screen"

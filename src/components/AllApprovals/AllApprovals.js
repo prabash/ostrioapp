@@ -66,30 +66,6 @@ export default class AllApprovals extends Component {
     return (
       <View style={styles.container}>
         <View>
-          <Header
-            style={[styles.header, { backgroundColor: this.state.themeColor }]}
-            androidStatusBarColor={this.state.themeColor}
-          >
-            <Left style={{ flex: 1, justifyContent: "flex-start" }}>
-              <Icon
-                ios="ios-menu"
-                android="md-menu"
-                onPress={() => this.props.navigation.openDrawer()}
-              />
-            </Left>
-            <Body
-              style={{
-                flex: 3,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Text style={styles.mainTitle}>ALL APPROVALS</Text>
-            </Body>
-            <Right style={{ flex: 1,  justifyContent: "flex-end" }} >
-              <Icon name="magnifier" type="SimpleLineIcons"/>
-            </Right>
-          </Header>
           <View>
             <List
               dataArray={CONTENT}
