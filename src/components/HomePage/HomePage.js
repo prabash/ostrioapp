@@ -8,20 +8,9 @@ import {
   FlatList,
   Dimensions
 } from "react-native";
-import {
-  Container,
-  Header,
-  Content,
-  Card,
-  CardItem,
-  Thumbnail,
-  Button,
-  Icon,
-  Left,
-  Body,
-  Right
-} from "native-base";
+import { Icon } from "native-base";
 import { Col, Row, Grid } from "react-native-easy-grid";
+import { onSignOut } from "../../Global/Auth";
 
 const data = [
   {
@@ -31,7 +20,7 @@ const data = [
   },
   {
     key: "Purchase Order",
-    icon: "target",
+    icon: "fire-truck",
     color: "#eb4d4b"
   },
   {
@@ -55,8 +44,8 @@ const data = [
     color: "#f9ca24"
   },
   {
-    key: "Test Item 3",
-    icon: "fire-truck",
+    key: "Logout",
+    icon: "logout",
     color: "#ff7979"
   }
 ];
@@ -88,6 +77,16 @@ export default class HomePage extends Component {
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) });
   }
 
+  menuItemOnPress = (key) => {
+    console.log("+++++++++++++++++++++ " + key);
+    if (key == "Logout") {
+      onSignOut().then(() => this.props.navigation.navigate("SignedOut"));
+    }
+    if (key == "Purchase Requisition") {
+      this.props.navigation.navigate("PurchaseRequisitions");
+    }
+  };
+
   renderItem = ({ item, index }) => {
     if (item.empty === true) {
       return (
@@ -96,7 +95,10 @@ export default class HomePage extends Component {
     }
     return (
       <View style={styles.flatListItem}>
-        <TouchableOpacity style={styles.flatListItem}>
+        <TouchableOpacity
+          style={styles.flatListItem}
+          onPress={() => this.menuItemOnPress(item.key)}
+        >
           <Grid>
             <Row size={2.5}>
               <Col size={0.5} />
@@ -110,7 +112,7 @@ export default class HomePage extends Component {
                 <Icon
                   name={item.icon}
                   type="MaterialCommunityIcons"
-                  style={{ fontSize: 50, color: item.color }}
+                  style={{ fontSize: 50, color: global.themeColor }}
                 />
               </Col>
               <Col size={1} />
@@ -138,19 +140,72 @@ export default class HomePage extends Component {
     return (
       <View style={styles.container}>
         <Grid>
-          <Row size={1.3}>
-            <View style={styles.profileHeader}>
-              <View style={styles.profileHeaderContent}>
-                <Image
-                  style={styles.avatar}
-                  source={{
-                    uri: "https://bootdey.com/img/Content/avatar/avatar1.png"
+          <Row size={1.2}>
+            <Grid style={{ flex: 1 }}>
+              <Row />
+              <Row />
+              <Row size={2}>
+                <Col
+                  size={2.5}
+                  style={{
+                    alignItems: "flex-start",
+                    justifyContent: "flex-end",
+                    alignContent: "flex-end"
                   }}
-                />
-                <Text style={styles.name}>John Doe</Text>
-                <Text style={styles.designation}>Product Designer</Text>
-              </View>
-            </View>
+                >
+                  <Text
+                    style={{ fontSize: 40, fontWeight: "100", paddingLeft: 30 }}
+                  >
+                    Hello
+                  </Text>
+                </Col>
+                <Col size={2} />
+              </Row>
+              <Row size={2}>
+                <Col
+                  size={2.5}
+                  style={{
+                    alignItems: "flex-start",
+                    justifyContent: "flex-start",
+                    alignContent: "flex-start"
+                  }}
+                >
+                  <Text
+                    style={{ fontSize: 42, fontWeight: "500", paddingLeft: 30 }}
+                  >
+                    John Doe
+                  </Text>
+                </Col>
+                <Col size={2} />
+              </Row>
+              <Row size={1.5}>
+                <Col
+                  size={2.5}
+                  style={{
+                    alignItems: "flex-start",
+                    justifyContent: "flex-start"
+                  }}
+                >
+                  <Grid>
+                    <Row>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontWeight: "500",
+                          paddingLeft: 30
+                        }}
+                      >
+                        Product&nbsp;
+                      </Text>
+                      <Text style={{ fontSize: 14, fontWeight: "100" }}>
+                        Designer
+                      </Text>
+                    </Row>
+                  </Grid>
+                </Col>
+                <Col size={2} />
+              </Row>
+            </Grid>
           </Row>
           <Row size={3}>
             <View style={styles.menuItemContainer}>
@@ -174,15 +229,7 @@ const styles = StyleSheet.create({
   },
   profileHeader: {
     flex: 1,
-    backgroundColor: global.backgroundColor,
-    shadowColor: "black",
-    shadowOpacity: 1,
-    shadowOffset: {
-      height: 10,
-      width: 10
-    },
-    shadowRadius: 4,
-    elevation: 2
+    backgroundColor: global.backgroundColor
   },
   profileHeaderContent: {
     padding: 30,
@@ -209,23 +256,23 @@ const styles = StyleSheet.create({
   },
   menuItemContainer: {
     flex: 1,
-    padding: 5
+    padding: 10
   },
   flatList: {
-    flex: 1,
-    marginVertical: 20
+    flex: 1
   },
   flatListItem: {
-    backgroundColor: global.foregroundColor,
+    backgroundColor: global.backgroundOffsetColor,
     flex: 1,
     margin: 2,
+    borderRadius: 10,
     height: Dimensions.get("window").width / numColumns
   },
   flatListItemInvisible: {
     backgroundColor: "transparent"
   },
   flatListItemText: {
-    color: global.backgroundColor,
+    color: global.foregroundColor,
     fontSize: 14,
     fontWeight: "bold"
   }

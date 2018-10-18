@@ -5,6 +5,7 @@ import { isSignedIn } from "./src/Global/Auth";
 import "./src/Global/Global";
 import { createRootNavigator } from "./src/Global/Router";
 import HomePage from "./src/components/HomePage/HomePage";
+import NestedList from "./src/components/TestScreens/NestedList";
 
 const instructions = Platform.select({
   ios: "Press Cmd+R to reload,\n" + "Cmd+D or shake for dev menu",
@@ -29,21 +30,22 @@ export default class App extends Component<Props> {
       .catch(err => alert("An error occurred"));
   }
 
-  // render() {
-  //   const { checkedSignIn, signedIn } = this.state;
-  //   //If we haven't checked AsyncStorage yet, don't render anything (better ways to do this)
-  //   if (!checkedSignIn) {
-  //     return null;
-  //   }
-    
-  //   const Layout = createRootNavigator(signedIn);
-  //   return <Layout />;
-  // }
   render() {
-    return (
-      <HomePage/>
-    );
+    const { checkedSignIn, signedIn } = this.state;
+    //If we haven't checked AsyncStorage yet, don't render anything (better ways to do this)
+    if (!checkedSignIn) {
+      return null;
+    }
+    
+    const Layout = createRootNavigator(signedIn);
+    return <Layout />;
   }
+
+  // render() {
+  //   return (
+  //     <NestedList/>
+  //   );
+  // }
   
 }
 

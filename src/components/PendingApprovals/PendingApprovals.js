@@ -9,34 +9,125 @@ import {
   TouchableOpacity
 } from "react-native";
 import * as Animatable from "react-native-animatable";
-import Collapsible from "react-native-collapsible";
 import { Header, Button, Left, Body, Right, Icon } from "native-base";
+import { ListItem } from "react-native-elements";
 import Accordion from "react-native-collapsible/Accordion";
 import ActionButton from "react-native-action-button";
-
-const BACON_IPSUM =
-  "Bacon ipsum dolor amet chuck turducken landjaeger tongue spare ribs. Picanha beef prosciutto meatball turkey shoulder shank salami cupim doner jowl pork belly cow. Chicken shankle rump swine tail frankfurter meatloaf ground round flank ham hock tongue shank andouille boudin brisket. ";
+import { Col, Row, Grid } from "react-native-easy-grid";
 
 const CONTENT = [
   {
-    title: "First Approval",
-    content: BACON_IPSUM
+    PRNo: "OTT/150000",
+    PRDate: "31/12/2018",
+    Status: "Pending",
+    lines: [
+      {
+        lineItemNo: 1,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-001"
+      },
+      {
+        lineItemNo: 2,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-001"
+      }
+    ]
   },
   {
-    title: "Second Approval",
-    content: BACON_IPSUM
+    PRNo: "OTT-150001",
+    PRDate: "14/12/2018",
+    Status: "Pending",
+    lines: [
+      {
+        lineItemNo: 1,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-002"
+      },
+      {
+        lineItemNo: 2,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-002"
+      },
+      {
+        lineItemNo: 3,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-002"
+      },
+      {
+        lineItemNo: 4,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-002"
+      }
+    ]
   },
   {
-    title: "Third Approval",
-    content: BACON_IPSUM
+    PRNo: "OTT-150002",
+    PRDate: "25/10/2018",
+    Status: "Pending",
+    lines: [
+      {
+        lineItemNo: 1,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-003"
+      },
+      {
+        lineItemNo: 2,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-003"
+      },
+      {
+        lineItemNo: 3,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-003"
+      }
+    ]
   },
   {
-    title: "Fourth Approval",
-    content: BACON_IPSUM
+    PRNo: "OTT-150003",
+    PRDate: "31/11/2018",
+    Status: "Pending",
+    lines: [
+      {
+        lineItemNo: 1,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-004"
+      },
+      {
+        lineItemNo: 2,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-004"
+      }
+    ]
   },
   {
-    title: "Fifth Approval",
-    content: BACON_IPSUM
+    PRNo: "OTT-150004",
+    PRDate: "31/10/2018",
+    Status: "Pending",
+    lines: [
+      {
+        lineItemNo: 1,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-005"
+      },
+      {
+        lineItemNo: 2,
+        StockCode: "UPKEEP-COMP",
+        StockDesc: "Upkeep company",
+        Vendor: "V-005"
+      }
+    ]
   }
 ];
 
@@ -47,8 +138,7 @@ export default class PendingApprovals extends Component {
       activeSections: [],
       collapsed: true,
       multipleSelect: false,
-      checked: false,
-      themeColor: "rgba(254, 164, 127,1.0)"
+      checked: false
     };
   }
 
@@ -56,7 +146,8 @@ export default class PendingApprovals extends Component {
     title: "Pending Approvals", // title showed on the navigator
     drawerIcon: ({ tintColor }) => (
       <Icon
-        name="clock" type="SimpleLineIcons"
+        name="clock"
+        type="SimpleLineIcons"
         style={{ fontSize: 24, color: tintColor }}
       />
     )
@@ -79,106 +170,113 @@ export default class PendingApprovals extends Component {
 
   renderHeader = (section, _, isActive) => {
     return (
-      <Animatable.View
-        duration={400}
-        style={[styles.listHeader, isActive ? styles.active : styles.inactive]}
-        transition="backgroundColor"
-      >
-        <Left style={{ flex: 1 }}>
-          <Icon
-            name="arrow-down"
-            type="EvilIcons"
-            style={{ color: "#FFFFFF" }}
-          />
-        </Left>
-        <Body
-          style={{
-            flex: 6,
-            alignItems: "flex-start",
-            justifyContent: "flex-start"
-          }}
-        >
-          <Text style={styles.listHeaderText}>{section.title}</Text>
-        </Body>
-        <Right style={{ flex: 1, alignItems: "center", justifyContent: "center"}}>
-          <Switch
-            value={this.state.checked}
-            onValueChange={this.checkOnValueChange}
-            trackColor="white"
-          />
-        </Right>
-      </Animatable.View>
+      <ListItem
+        title={`PR No: ${section.PRNo}`}
+        titleStyle={styles.listHeaderText}
+        subtitle={`PR Date: ${section.PRDate} \n Status: ${section.Status}`}
+        subtitleStyle={styles.lineItemSubtitle}
+        key={section.PRNo}
+        badge={{ value: section.lines.length , textStyle: { color: global.foregroundColor }, containerStyle: { backgroundColor: global.accentColor }}}
+        leftIcon= {<Icon name="shopping" type="MaterialCommunityIcons" style={{ color: global.foregroundColor }}/>}
+        />
     );
   };
 
   renderContent(section, _, isActive) {
-    return (
-      <Animatable.View
-        duration={400}
-        style={[styles.listContent, isActive ? styles.active : styles.inactive]}
-        transition="backgroundColor"
-      >
-        <Animatable.Text
-          animation={isActive ? "bounceIn" : undefined}
-          style={styles.listContentText}
-        >
-          {section.content}
-        </Animatable.Text>
-      </Animatable.View>
-    );
+    return section.lines.map(lineItem => (
+      <ListItem
+        containerStyle ={{backgroundColor: global.backgroundOffsetColor }}
+        title={lineItem.lineItemNo + " : " + lineItem.StockCode}
+        titleStyle={styles.lineItemTitle}
+        key={lineItem.lineItemNo}
+        subtitle={`Vendor: ${lineItem.Vendor}`}
+        subtitleStyle={styles.lineItemSubtitle}
+        leftIcon= {<Icon name="cart-outline" type="MaterialCommunityIcons" style={{ color: global.foregroundColor, paddingLeft: 20 , fontWeight: "100"}}/>}
+        switchButton
+        hideChevron
+      />
+    ));
   }
 
   render() {
     const { multipleSelect, activeSections, checked } = this.state;
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.accordianContainer}>
-          <Accordion
-            activeSections={activeSections}
-            sections={CONTENT}
-            expandMultiple={multipleSelect}
-            renderHeader={this.renderHeader}
-            renderContent={this.renderContent}
-            duration={400}
-            onChange={this.setSections}
-          />
-        </ScrollView>
+        <Grid>
+          <Row size={0.4}>
+            <Grid style={{ flex: 1 }}>
+              <Row />
 
-        <ActionButton
-          buttonColor= {this.state.themeColor}
-          style={{ marginBottom: 30 }}
-          degrees={0}
-          renderIcon={active =>
-            active ? (
-              <Icon
-                name="checkbox-multiple-marked-outline"
-                type="MaterialCommunityIcons"
-                style={styles.actionButtonIcon}
-              />
-            ) : (
-              <Icon
-                name="checkbox-multiple-marked"
-                type="MaterialCommunityIcons"
-                style={styles.actionButtonIcon}
-              />
-            )
-          }
-        >
-          >
-        </ActionButton>
+              <Row
+                size={2}
+                style={{
+                  alignItems: "flex-start",
+                  justifyContent: "flex-start",
+                  alignContent: "flex-start"
+                }}
+              >
+                <Text
+                  style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}
+                >
+                  Pending
+                </Text>
+                <Text style={{ fontSize: 30, fontWeight: "100" }}>
+                  &nbsp;Approvals
+                </Text>
+              </Row>
+            </Grid>
+          </Row>
+          <Row size={3}>
+            <View style={{flex: 1}}>
+              <ScrollView style={styles.accordianContainer}>
+                <Accordion
+                  activeSections={activeSections}
+                  sections={CONTENT}
+                  expandMultiple={multipleSelect}
+                  renderHeader={this.renderHeader}
+                  renderContent={this.renderContent}
+                  duration={400}
+                  onChange={this.setSections}
+                />
+              </ScrollView>
+              <ActionButton
+                buttonColor={global.backgroundOffsetColor}
+                style={styles.actionButton}
+                degrees={0}
+                renderIcon={active =>
+                  active ? (
+                    <Icon
+                      name="checkbox-multiple-marked-outline"
+                      type="MaterialCommunityIcons"
+                      style={styles.actionButtonIcon}
+                    />
+                  ) : (
+                    <Icon
+                      name="checkbox-multiple-marked"
+                      type="MaterialCommunityIcons"
+                      style={styles.actionButtonIcon}
+                    />
+                  )
+                }
+              >
+                >
+              </ActionButton>
 
-        <View style={styles.buttonContainer}>
-          <View style={styles.approveRejectButtonsView}>
-            <Button ful success style={styles.approveRejectButton}>
-              <Text style={styles.approveRejectButtonText}>APPROVE</Text>
-            </Button>
-          </View>
-          <View style={styles.approveRejectButtonsView}>
-            <Button ful danger style={styles.approveRejectButton}>
-              <Text style={styles.approveRejectButtonText}>REJECT</Text>
-            </Button>
-          </View>
-        </View>
+              <View style={styles.buttonContainer}>
+                <View style={styles.approveRejectButtonsView}>
+                  <Button ful success style={styles.approveRejectButton}>
+                    <Text style={styles.approveRejectButtonText}>APPROVE</Text>
+                  </Button>
+                </View>
+                <View style={styles.approveRejectButtonsView}>
+                  <Button ful danger style={styles.approveRejectButton}>
+                    <Text style={styles.approveRejectButtonText}>REJECT</Text>
+                  </Button>
+                </View>
+              </View>
+            </View>
+          </Row>
+        </Grid>
       </View>
     );
   }
@@ -189,13 +287,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
-    backgroundColor: "#404040"
+    backgroundColor: global.backgroundColor
   },
   header: {
     flexDirection: "row"
   },
   headerTitle: {
-    color: "#FFFFFF"
+    color: global.foregroundColor
   },
   logo: {
     width: 50,
@@ -215,27 +313,51 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   listHeader: {
-    backgroundColor: "#404040",
+    backgroundColor: global.backgroundColor,
     padding: 10,
     flexDirection: "row",
     justifyContent: "center",
     alignContent: "center"
   },
   listHeaderText: {
-    color: "#FFFFFF",
+    color: global.foregroundColor,
     textAlign: "left",
     fontSize: 16,
-    fontWeight: "200"
+    fontWeight: "bold",
+    paddingLeft: 10
   },
   listContent: {
     padding: 20,
-    backgroundColor: "#252525"
+    backgroundColor: global.backgroundOffsetColor
   },
   listContentText: {
-    color: "#FFFFFF"
+    color: global.foregroundColor
+  },
+  lineItemTitle: {
+    color: global.foregroundColor,
+    textAlign: "left",
+    fontSize: 16,
+    paddingLeft: 10
+  },
+  lineItemSubtitle: {
+    color: global.foregroundColor,
+    textAlign: "left",
+    fontSize: 12,
+    paddingLeft: 10
+  },
+  actionButton: {
+    marginBottom: 30,
+    shadowColor: "black",
+    shadowOpacity: 1,
+    shadowOffset: {
+      height: 10,
+      width: 10
+    },
+    shadowRadius: 4,
+    elevation: 2
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexDirection: "row"
   },
   approveRejectButtonsView: {
     flex: 1,
@@ -243,11 +365,12 @@ const styles = StyleSheet.create({
   },
   approveRejectButton: {
     alignSelf: "center",
-    alignItems:"center",
-    justifyContent: 'center',
-    width: "100%"
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    borderRadius: 100
   },
   approveRejectButtonText: {
-    fontWeight: "bold",
+    fontWeight: "bold"
   }
 });

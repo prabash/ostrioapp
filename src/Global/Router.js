@@ -8,6 +8,7 @@ import PurchaseRequisitionsPage from "../components/PurchaseRequisitionsPage/Pur
 import Splash from "../components/Splash/Splash";
 import PendingApprovals from "../components/PendingApprovals/PendingApprovals";
 import AllApprovals from "../components/AllApprovals/AllApprovals";
+import HomePage from "../components/HomePage/HomePage";
 
 export const SignedOut = createStackNavigator(
   {
@@ -25,7 +26,13 @@ export const SignedOut = createStackNavigator(
 
 export const SignedIn = createStackNavigator(
   {
-    Home: {
+    Home : {
+      screen: HomePage,
+      navigationOptions: {
+        tabBarLabel: "Home",
+      }
+    },
+    PurchaseRequisitions: {
       screen: PurchaseRequisitionsPage,
       navigationOptions: {
         tabBarLabel: "Purchase Requisitons",
@@ -45,7 +52,7 @@ export const SignedIn = createStackNavigator(
     },
   },
   {
-    headerMode: "screen"
+    headerMode: "none"
   }
 );
 
