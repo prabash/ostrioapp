@@ -8,7 +8,7 @@ import {
   FlatList,
   Dimensions
 } from "react-native";
-import { Icon } from "native-base";
+import { Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { onSignOut } from "../../Global/Auth";
 
@@ -16,6 +16,8 @@ const data = [
   {
     key: "Purchase Requisition",
     icon: "shopping",
+    count: 50,
+    badgeColor: global.accentColor,
     color: "#ffbe76"
   },
   {
@@ -26,6 +28,8 @@ const data = [
   {
     key: "Contracts",
     icon: "clipboard-check-outline",
+    count: 20,
+    badgeColor: global.accentColor,
     color: "#6ab04c"
   },
   {
@@ -83,7 +87,7 @@ export default class HomePage extends Component {
       onSignOut().then(() => this.props.navigation.navigate("SignedOut"));
     }
     if (key == "Purchase Requisition") {
-      this.props.navigation.navigate("PurchaseRequisitions");
+      this.props.navigation.navigate("PurchaseRequisitionsMenu");
     }
   };
 
@@ -100,22 +104,35 @@ export default class HomePage extends Component {
           onPress={() => this.menuItemOnPress(item.key)}
         >
           <Grid>
-            <Row size={2.5}>
+            <Row size={2.5} >
               <Col size={0.5} />
               <Col
                 size={5}
                 style={{
-                  alignContent: "flex-end",
+                  alignItems: "flex-start",
                   justifyContent: "flex-end"
                 }}
               >
                 <Icon
                   name={item.icon}
-                  type="MaterialCommunityIcons"
+                  type="material-community"
+                  color={global.themeColor}
+                  size={50}
                   style={{ fontSize: 50, color: global.themeColor }}
                 />
               </Col>
-              <Col size={1} />
+              <Col size={2}>
+                <Grid>
+                  <Row/>
+                  <Row>
+                    <View style={{ borderRadius: 10, backgroundColor: item.badgeColor, alignItems: "center", justifyContent: "center"}}>
+                      <Text style = {{ color : global.foregroundColor, fontSize: 11 }}> {item.count} </Text>
+                    </View>
+                  </Row>
+                  <Row/>
+                  <Row/>
+                </Grid>
+              </Col>
             </Row>
             <Row size={2}>
               <Col size={0.5} />

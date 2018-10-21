@@ -1,19 +1,10 @@
 import React, { Component } from "react";
-import {
-  Switch,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity
-} from "react-native";
-import * as Animatable from "react-native-animatable";
-import { Header, Button, Left, Body, Right, Icon } from "native-base";
-import { ListItem } from "react-native-elements";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ListItem, Icon } from "react-native-elements";
+import { Button } from "native-base";
 import Accordion from "react-native-collapsible/Accordion";
-import ActionButton from "react-native-action-button";
 import { Col, Row, Grid } from "react-native-easy-grid";
+import { global } from "core-js";
 
 const CONTENT = [
   {
@@ -160,7 +151,7 @@ export default class PendingApprovals extends Component {
     drawerIcon: ({ tintColor }) => (
       <Icon
         name="clock"
-        type="SimpleLineIcons"
+        type="simple-line-icon"
         style={{ fontSize: 24, color: tintColor }}
       />
     )
@@ -195,17 +186,13 @@ export default class PendingApprovals extends Component {
           containerStyle: { backgroundColor: global.accentColor }
         }}
         leftIcon={
-          <Icon
-            name="shopping"
-            type="MaterialCommunityIcons"
-            style={{ color: global.foregroundColor }}
-          />
+          <Icon name="cart" type="evilicon" color={global.foregroundColor} />
         }
       />
     );
   };
 
-  renderContent(section, _, isActive) {
+  renderContent = (section, _, isActive) => {
     return section.lines.map(lineItem => (
       <ListItem
         containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
@@ -225,19 +212,18 @@ export default class PendingApprovals extends Component {
         }}
         leftIcon={
           <Icon
-            name="cart-outline"
-            type="MaterialCommunityIcons"
+            name="archive"
+            type="evilicon"
+            color={global.foregroundColor}
             style={{
-              color: global.foregroundColor,
-              paddingLeft: 20,
-              fontWeight: "100"
+              paddingLeft: 20
             }}
           />
         }
         hideChevron
       />
     ));
-  }
+  };
 
   render() {
     const { multipleSelect, activeSections, checked } = this.state;
@@ -259,11 +245,39 @@ export default class PendingApprovals extends Component {
                 <Text
                   style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}
                 >
-                  All
+                  All Purchase
                 </Text>
                 <Text style={{ fontSize: 30, fontWeight: "100" }}>
-                  &nbsp;Approvals
+                  &nbsp;Requisitions
                 </Text>
+              </Row>
+            </Grid>
+          </Row>
+          <Row size={0.4}>
+            <Grid>
+              <Row>
+                <Col>
+                  <View style={styles.filterButtonView}>
+                    <Button rounded style={[styles.filterButton, {borderColor: "#3867d6", borderWidth: 2}]}>
+                      <Text style={{ color: "#3867d6" }}>All</Text>
+                    </Button>
+                  </View>
+                </Col>
+                <Col>
+                  <View style={styles.filterButtonView}>
+                    <Button rounded success style={[styles.filterButton, {borderColor: "#20bf6b", borderWidth: 2}]}>
+                      <Text style={{ color: "#20bf6b" }}>Approved</Text>
+                    </Button>
+                  </View>
+                </Col>
+                <Col>
+                  <View style={styles.filterButtonView}>
+                    <Button rounded danger style={[styles.filterButton, {borderColor: "#fc5c65", borderWidth: 2}]}>
+                      <Text style={{ color: "#fc5c65" }}>Rejected</Text>
+                    </Button>
+                  </View>
+                </Col>
+                <Col />
               </Row>
             </Grid>
           </Row>
@@ -331,6 +345,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     paddingLeft: 10
+  },
+  filterButtonView: {
+    flex: 1,
+    padding: 5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  filterButton: {
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "90%",
+    height: "50%",
+    borderRadius: 50,
+    backgroundColor: global.backgroundColor
   },
   listContent: {
     padding: 20,

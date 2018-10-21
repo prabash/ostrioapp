@@ -8,7 +8,7 @@ import {
   StatusBar,
   Image
 } from "react-native";
-import { Icon } from "native-base";
+import { Icon } from "react-native-elements";
 import { onSignIn } from "../../Global/Auth";
 
 import Footer from "../Footer/Footer";
@@ -32,7 +32,7 @@ export default class Login extends Component {
           <View style={styles.loginFormContainer}>
             <StatusBar barStyle="light-content" />
             <View style={styles.inputContainer}>
-              <Icon name="user" type="EvilIcons" style={styles.inputIcon} />
+              <Icon name="user" type="evilicon" style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Username"
@@ -45,7 +45,7 @@ export default class Login extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Icon name="lock" type="EvilIcons" style={styles.inputIcon} />
+              <Icon name="lock" type="evilicon" style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Password"

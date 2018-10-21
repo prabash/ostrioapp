@@ -8,7 +8,7 @@ import {
   FlatList,
   Dimensions
 } from "react-native";
-import { Icon, Badge } from "native-base";
+import { Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
 
 const data = [
@@ -17,14 +17,14 @@ const data = [
     icon: "clock-fast",
     color: "#eb4d4b",
     count: 20,
-    badgeColor : "#eb4d4b"
+    badgeColor : global.accentColor
   },
   {
-    key: "All Approvals",
+    key: "All Purchase Requisitions",
     icon: "playlist-check",
     color: "#6ab04c",
     count: 50,
-    badgeColor : "#6ab04c"
+    badgeColor : global.accentColor
   },
   {
     key: "Home",
@@ -68,7 +68,7 @@ export default class PurchaseRequisitionsPage extends Component {
     if (key == "Pending Approvals") {
       this.props.navigation.navigate("PendingApprovals");
     }
-    if (key == "All Approvals") {
+    if (key == "All Purchase Requisitions") {
       this.props.navigation.navigate("AllApprovals");
     }
   };
@@ -95,8 +95,9 @@ export default class PurchaseRequisitionsPage extends Component {
               >
                 <Icon
                   name={item.icon}
-                  type="MaterialCommunityIcons"
-                  style={{ fontSize: 50, color: global.themeColor }}
+                  type="material-community"
+                  size={50}
+                  color={global.themeColor}
                 />
               </Col>
               <Col size={2}>
@@ -104,7 +105,7 @@ export default class PurchaseRequisitionsPage extends Component {
                   <Row/>
                   <Row>
                     <View style={{ borderRadius: 10, backgroundColor: item.badgeColor, alignItems: "center", justifyContent: "center"}}>
-                      <Text style = {{ color : global.backgroundColor, fontSize: 11 }}> {item.count} </Text>
+                      <Text style = {{ color : global.foregroundColor, fontSize: 11 }}> {item.count} </Text>
                     </View>
                   </Row>
                   <Row/>
@@ -138,7 +139,6 @@ export default class PurchaseRequisitionsPage extends Component {
           <Row size={0.4}>
             <Grid style={{ flex: 1 }}>
               <Row />
-
               <Row
                 size={2}
                 style={{

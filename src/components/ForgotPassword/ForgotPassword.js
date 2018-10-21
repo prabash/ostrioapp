@@ -8,7 +8,7 @@ import {
   StatusBar,
   Image
 } from "react-native";
-import { Icon } from "native-base";
+import { Icon } from "react-native-elements";
 import Footer from "../Footer/Footer";
 
 export default class ForgotPassword extends Component {
@@ -35,7 +35,7 @@ export default class ForgotPassword extends Component {
             </View>
 
             <View style={styles.inputContainer}>
-              <Icon name="envelope" type="EvilIcons" style={styles.inputIcon} />
+              <Icon name="envelope" type="evilicon" color={global.foregroundColor} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Email Address"
@@ -116,8 +116,7 @@ const styles = StyleSheet.create({
     height: 40
   },
   inputIcon: {
-    paddingLeft: 5,
-    color: global.foregroundColor
+    paddingLeft: 5
   },
   input: {
     flex: 1,

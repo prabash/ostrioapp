@@ -4,10 +4,12 @@ import { StyleSheet, View, Text } from "react-native";
 import { createStackNavigator, createSwitchNavigator } from "react-navigation";
 import Login from "../components/Login/Login";
 import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
-import PurchaseRequisitionsPage from "../components/PurchaseRequisitionsPage/PurchaseRequisitionsPage";
+import PurchaseRequisitionsMenu from "../components/PurchaseRequisitionsMenu/PurchaseRequisitionsMenu";
 import Splash from "../components/Splash/Splash";
 import PendingApprovals from "../components/PendingApprovals/PendingApprovals";
 import AllApprovals from "../components/AllApprovals/AllApprovals";
+import PurchaseRequisitionHeader from "../components/PurchaseRequisitionHeader/PurchaseRequisitionHeader";
+import PurchaseRequisitionLine from "../components/PurchaseRequisitionLine/PurchaseRequisitionLine";
 import HomePage from "../components/HomePage/HomePage";
 
 export const SignedOut = createStackNavigator(
@@ -32,8 +34,8 @@ export const SignedIn = createStackNavigator(
         tabBarLabel: "Home",
       }
     },
-    PurchaseRequisitions: {
-      screen: PurchaseRequisitionsPage,
+    PurchaseRequisitionsMenu: {
+      screen: PurchaseRequisitionsMenu,
       navigationOptions: {
         tabBarLabel: "Purchase Requisitons",
       }
@@ -48,6 +50,18 @@ export const SignedIn = createStackNavigator(
       screen : AllApprovals,
       navigationOptions: {
         tabBarLabel: "All Approvals",
+      }
+    },
+    PurchaseRequisitionHeader: {
+      screen: PurchaseRequisitionHeader,
+      navigationOptions: {
+        tabBarLabel: "Purchase Req. Header",
+      }
+    },
+    PurchaseRequisitionLine: {
+      screen: PurchaseRequisitionLine,
+      navigationOptions: {
+        tabBarLabel: "Purchase Req. Line",
       }
     },
   },

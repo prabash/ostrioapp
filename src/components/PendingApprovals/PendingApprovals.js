@@ -8,11 +8,9 @@ import {
   Image,
   TouchableOpacity
 } from "react-native";
-import * as Animatable from "react-native-animatable";
-import { Header, Button, Left, Body, Right, Icon } from "native-base";
-import { ListItem } from "react-native-elements";
+import { Button } from "native-base";
+import { ListItem, Icon } from "react-native-elements";
 import Accordion from "react-native-collapsible/Accordion";
-import ActionButton from "react-native-action-button";
 import { Col, Row, Grid } from "react-native-easy-grid";
 
 const CONTENT = [
@@ -142,17 +140,6 @@ export default class PendingApprovals extends Component {
     };
   }
 
-  static navigationOptions = {
-    title: "Pending Approvals", // title showed on the navigator
-    drawerIcon: ({ tintColor }) => (
-      <Icon
-        name="clock"
-        type="SimpleLineIcons"
-        style={{ fontSize: 24, color: tintColor }}
-      />
-    )
-  };
-
   checkOnValueChange = value => {
     this.setState({ checked: value });
     console.log("Switch 1 is: " + value);
@@ -160,6 +147,13 @@ export default class PendingApprovals extends Component {
 
   toggleExpanded = () => {
     this.setState({ collapsed: !this.state.collapsed });
+  };
+
+  onLongPressHeader = itemId => {
+    this.props.navigation.navigate("PurchaseRequisitionHeader");
+  };
+  onLongPressLine = itemId => {
+    this.props.navigation.navigate("PurchaseRequisitionLine");
   };
 
   setSections = sections => {
@@ -174,29 +168,40 @@ export default class PendingApprovals extends Component {
         title={`PR No: ${section.PRNo}`}
         titleStyle={styles.listHeaderText}
         subtitle={`PR Date: ${section.PRDate} \n Status: ${section.Status}`}
+        
         subtitleStyle={styles.lineItemSubtitle}
         key={section.PRNo}
-        badge={{ value: section.lines.length , textStyle: { color: global.foregroundColor }, containerStyle: { backgroundColor: global.accentColor }}}
-        leftIcon= {<Icon name="shopping" type="MaterialCommunityIcons" style={{ color: global.foregroundColor }}/>}
-        />
+        badge={{
+          value: section.lines.length,
+          textStyle: { color: global.foregroundColor },
+          containerStyle: { backgroundColor: global.accentColor }
+        }}
+        leftIcon={
+          <Icon name="cart" type="evilicon" color={global.foregroundColor} onPress={()=> this.onLongPressHeader(section.PRNo)}/>
+        }
+        switchButton
+        hideChevron
+      />
     );
   };
 
-  renderContent(section, _, isActive) {
+  renderContent = (section, _, isActive) => {
     return section.lines.map(lineItem => (
       <ListItem
-        containerStyle ={{backgroundColor: global.backgroundOffsetColor }}
+        containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
         title={lineItem.lineItemNo + " : " + lineItem.StockCode}
         titleStyle={styles.lineItemTitle}
         key={lineItem.lineItemNo}
         subtitle={`Vendor: ${lineItem.Vendor}`}
         subtitleStyle={styles.lineItemSubtitle}
-        leftIcon= {<Icon name="cart-outline" type="MaterialCommunityIcons" style={{ color: global.foregroundColor, paddingLeft: 20 , fontWeight: "100"}}/>}
+        leftIcon={
+          <Icon name="archive" type="evilicon" color={global.foregroundColor} onPress={()=> this.onLongPressLine(lineItem.lineItemNo)}/>
+        }
         switchButton
         hideChevron
       />
     ));
-  }
+  };
 
   render() {
     const { multipleSelect, activeSections, checked } = this.state;
@@ -227,7 +232,7 @@ export default class PendingApprovals extends Component {
             </Grid>
           </Row>
           <Row size={3}>
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <ScrollView style={styles.accordianContainer}>
                 <Accordion
                   activeSections={activeSections}
@@ -239,28 +244,6 @@ export default class PendingApprovals extends Component {
                   onChange={this.setSections}
                 />
               </ScrollView>
-              <ActionButton
-                buttonColor={global.backgroundOffsetColor}
-                style={styles.actionButton}
-                degrees={0}
-                renderIcon={active =>
-                  active ? (
-                    <Icon
-                      name="checkbox-multiple-marked-outline"
-                      type="MaterialCommunityIcons"
-                      style={styles.actionButtonIcon}
-                    />
-                  ) : (
-                    <Icon
-                      name="checkbox-multiple-marked"
-                      type="MaterialCommunityIcons"
-                      style={styles.actionButtonIcon}
-                    />
-                  )
-                }
-              >
-                >
-              </ActionButton>
 
               <View style={styles.buttonContainer}>
                 <View style={styles.approveRejectButtonsView}>
