@@ -17,14 +17,14 @@ const data = [
     icon: "clock-fast",
     color: "#eb4d4b",
     count: 20,
-    badgeColor : global.accentColor
+    badgeColor: global.accentColor
   },
   {
     key: "All Purchase Requisitions",
     icon: "playlist-check",
     color: "#6ab04c",
     count: 50,
-    badgeColor : global.accentColor
+    badgeColor: global.accentColor
   },
   {
     key: "Home",
@@ -60,7 +60,7 @@ export default class PurchaseRequisitionsPage extends Component {
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) });
   }
 
-  menuItemOnPress = (key) => {
+  menuItemOnPress = key => {
     console.log("+++++++++++++++++++++ " + key);
     if (key == "Home") {
       this.props.navigation.navigate("Home");
@@ -73,7 +73,6 @@ export default class PurchaseRequisitionsPage extends Component {
     }
   };
 
-
   renderItem = ({ item, index }) => {
     if (item.empty === true) {
       return (
@@ -82,14 +81,17 @@ export default class PurchaseRequisitionsPage extends Component {
     }
     return (
       <View style={styles.flatListItem}>
-        <TouchableOpacity style={styles.flatListItem} onPress={() => this.menuItemOnPress(item.key)}>
+        <TouchableOpacity
+          style={styles.flatListItem}
+          onPress={() => this.menuItemOnPress(item.key)}
+        >
           <Grid>
             <Row size={2.5}>
               <Col size={0.5} />
               <Col
                 size={5}
                 style={{
-                  alignContent: "flex-end",
+                  alignItems: "flex-start",
                   justifyContent: "flex-end"
                 }}
               >
@@ -102,14 +104,26 @@ export default class PurchaseRequisitionsPage extends Component {
               </Col>
               <Col size={2}>
                 <Grid>
-                  <Row/>
+                  <Row />
                   <Row>
-                    <View style={{ borderRadius: 10, backgroundColor: item.badgeColor, alignItems: "center", justifyContent: "center"}}>
-                      <Text style = {{ color : global.foregroundColor, fontSize: 11 }}> {item.count} </Text>
+                    <View
+                      style={{
+                        borderRadius: 10,
+                        backgroundColor: item.badgeColor,
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}
+                    >
+                      <Text
+                        style={{ color: global.foregroundColor, fontSize: 11 }}
+                      >
+                        {" "}
+                        {item.count}{" "}
+                      </Text>
                     </View>
                   </Row>
-                  <Row/>
-                  <Row/>
+                  <Row />
+                  <Row />
                 </Grid>
               </Col>
             </Row>
@@ -118,7 +132,7 @@ export default class PurchaseRequisitionsPage extends Component {
               <Col
                 size={5}
                 style={{
-                  alignContent: "flex-start",
+                  alignItems: "flex-start",
                   justifyContent: "flex-start"
                 }}
               >

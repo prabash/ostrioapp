@@ -9,7 +9,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Button } from "native-base";
-import { ListItem, Icon } from "react-native-elements";
+import { ListItem, Icon, SearchBar } from "react-native-elements";
 import Accordion from "react-native-collapsible/Accordion";
 import { Col, Row, Grid } from "react-native-easy-grid";
 
@@ -168,7 +168,6 @@ export default class PendingApprovals extends Component {
         title={`PR No: ${section.PRNo}`}
         titleStyle={styles.listHeaderText}
         subtitle={`PR Date: ${section.PRDate} \n Status: ${section.Status}`}
-        
         subtitleStyle={styles.lineItemSubtitle}
         key={section.PRNo}
         badge={{
@@ -177,7 +176,12 @@ export default class PendingApprovals extends Component {
           containerStyle: { backgroundColor: global.accentColor }
         }}
         leftIcon={
-          <Icon name="cart" type="evilicon" color={global.foregroundColor} onPress={()=> this.onLongPressHeader(section.PRNo)}/>
+          <Icon
+            name="cart"
+            type="evilicon"
+            color={global.foregroundColor}
+            onPress={() => this.onLongPressHeader(section.PRNo)}
+          />
         }
         switchButton
         hideChevron
@@ -195,7 +199,12 @@ export default class PendingApprovals extends Component {
         subtitle={`Vendor: ${lineItem.Vendor}`}
         subtitleStyle={styles.lineItemSubtitle}
         leftIcon={
-          <Icon name="archive" type="evilicon" color={global.foregroundColor} onPress={()=> this.onLongPressLine(lineItem.lineItemNo)}/>
+          <Icon
+            name="archive"
+            type="evilicon"
+            color={global.foregroundColor}
+            onPress={() => this.onLongPressLine(lineItem.lineItemNo)}
+          />
         }
         switchButton
         hideChevron
@@ -207,30 +216,25 @@ export default class PendingApprovals extends Component {
     const { multipleSelect, activeSections, checked } = this.state;
     return (
       <View style={styles.container}>
-        <Grid>
-          <Row size={0.4}>
-            <Grid style={{ flex: 1 }}>
-              <Row />
-
-              <Row
-                size={2}
-                style={{
-                  alignItems: "flex-start",
-                  justifyContent: "flex-start",
-                  alignContent: "flex-start"
-                }}
-              >
-                <Text
-                  style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}
-                >
-                  Pending
-                </Text>
-                <Text style={{ fontSize: 30, fontWeight: "100" }}>
-                  &nbsp;Approvals
-                </Text>
-              </Row>
-            </Grid>
-          </Row>
+        <View style={styles.headerContainer}>
+          <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
+            Pending
+          </Text>
+          <Text style={{ fontSize: 30, fontWeight: "100" }}>
+            &nbsp;Approvals
+          </Text>
+        </View>
+        <View style={styles.searchBarContainer}>
+          <SearchBar
+            lightTheme
+            icon={{ type: "evilicons", name: "search" }}
+            placeholder="Search PRs..."
+            containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
+            inputStyle={{ backgroundColor: global.backgroundColor }}
+            round
+          />
+        </View>
+        <Grid style={styles.bodyContainer}>
           <Row size={3}>
             <View style={{ flex: 1 }}>
               <ScrollView style={styles.accordianContainer}>
@@ -271,6 +275,21 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     backgroundColor: global.backgroundColor
+  },
+  headerContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+    marginBottom: 10,
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    alignContent: "flex-start"
+  },
+  searchBarContainer: {
+    marginBottom: 10,
+    backgroundColor: "blue"
+  },
+  bodyContainer: {
+    flex: 1
   },
   header: {
     flexDirection: "row"

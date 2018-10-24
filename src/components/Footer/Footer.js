@@ -10,7 +10,7 @@ export default class Footer extends Component {
   render() {
     return (
       <View style={styles.footer}>
-        <Text style={styles.footNote}>&#169; OS TRIO 2018 | All Rights Reserved</Text>
+        <Text style={styles.footNote}>&#169; OS TRIO TECHNOLOGY SDN BHD | All Rights Reserved</Text>
       </View>
     );
   }

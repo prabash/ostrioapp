@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { ListItem, Icon } from "react-native-elements";
+import { ListItem, Icon, SearchBar } from "react-native-elements";
 import { Button } from "native-base";
 import Accordion from "react-native-collapsible/Accordion";
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -229,58 +229,74 @@ export default class PendingApprovals extends Component {
     const { multipleSelect, activeSections, checked } = this.state;
     return (
       <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
+            All Purchase
+          </Text>
+          <Text style={{ fontSize: 30, fontWeight: "100" }}>
+            &nbsp;Requisitions
+          </Text>
+        </View>
+        <View style={styles.searchBarContainer}>
+          <SearchBar
+            lightTheme
+            icon={{ type: "evilicons", name: "search" }}
+            placeholder="Search PRs..."
+            containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
+            inputStyle={{ backgroundColor: global.backgroundColor }}
+            round
+          />
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.filterButtonView}>
+            <Button
+              rounded
+              style={[
+                styles.filterButton,
+                { borderColor: "#3867d6", borderWidth: 2 }
+              ]}
+            >
+              <Text style={{ color: "#3867d6" }}>All</Text>
+            </Button>
+          </View>
+          <View style={styles.filterButtonView}>
+            <Button
+              rounded
+              danger
+              style={[
+                styles.filterButton,
+                { borderColor: "#f1c40f", borderWidth: 2 }
+              ]}
+            >
+              <Text style={{ color: "#f1c40f" }}>Pending</Text>
+            </Button>
+          </View>
+          <View style={styles.filterButtonView}>
+            <Button
+              rounded
+              success
+              style={[
+                styles.filterButton,
+                { borderColor: "#20bf6b", borderWidth: 2 }
+              ]}
+            >
+              <Text style={{ color: "#20bf6b" }}>Approved</Text>
+            </Button>
+          </View>
+          <View style={styles.filterButtonView}>
+            <Button
+              rounded
+              danger
+              style={[
+                styles.filterButton,
+                { borderColor: "#fc5c65", borderWidth: 2 }
+              ]}
+            >
+              <Text style={{ color: "#fc5c65" }}>Rejected</Text>
+            </Button>
+          </View>
+        </View>
         <Grid>
-          <Row size={0.4}>
-            <Grid style={{ flex: 1 }}>
-              <Row />
-
-              <Row
-                size={2}
-                style={{
-                  alignItems: "flex-start",
-                  justifyContent: "flex-start",
-                  alignContent: "flex-start"
-                }}
-              >
-                <Text
-                  style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}
-                >
-                  All Purchase
-                </Text>
-                <Text style={{ fontSize: 30, fontWeight: "100" }}>
-                  &nbsp;Requisitions
-                </Text>
-              </Row>
-            </Grid>
-          </Row>
-          <Row size={0.4}>
-            <Grid>
-              <Row>
-                <Col>
-                  <View style={styles.filterButtonView}>
-                    <Button rounded style={[styles.filterButton, {borderColor: "#3867d6", borderWidth: 2}]}>
-                      <Text style={{ color: "#3867d6" }}>All</Text>
-                    </Button>
-                  </View>
-                </Col>
-                <Col>
-                  <View style={styles.filterButtonView}>
-                    <Button rounded success style={[styles.filterButton, {borderColor: "#20bf6b", borderWidth: 2}]}>
-                      <Text style={{ color: "#20bf6b" }}>Approved</Text>
-                    </Button>
-                  </View>
-                </Col>
-                <Col>
-                  <View style={styles.filterButtonView}>
-                    <Button rounded danger style={[styles.filterButton, {borderColor: "#fc5c65", borderWidth: 2}]}>
-                      <Text style={{ color: "#fc5c65" }}>Rejected</Text>
-                    </Button>
-                  </View>
-                </Col>
-                <Col />
-              </Row>
-            </Grid>
-          </Row>
           <Row size={3}>
             <View style={{ flex: 1 }}>
               <ScrollView style={styles.accordianContainer}>
@@ -308,6 +324,18 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     backgroundColor: global.backgroundColor
+  },
+  headerContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+    marginBottom: 10,
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    alignContent: "flex-start"
+  },
+  searchBarContainer: {
+    marginBottom: 10,
+    backgroundColor: "blue"
   },
   header: {
     flexDirection: "row"
@@ -350,14 +378,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 5,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   filterButton: {
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
     width: "90%",
-    height: "50%",
     borderRadius: 50,
     backgroundColor: global.backgroundColor
   },

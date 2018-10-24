@@ -6,13 +6,15 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList,
+  Dimensions
 } from "react-native";
 import { Form, Item, Input, Textarea, Label } from "native-base";
 import { ListItem, Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
 
-
+const numColumns = 5;
 export default class PurchaseRequisitionHeader extends Component {
   constructor(props) {
     super(props);
@@ -28,9 +30,62 @@ export default class PurchaseRequisitionHeader extends Component {
       address: "Block H, 13,\nPetaling Jaya \nSelangor, Malaysia",
       remarks:
         "Refreshments for level 2\nThe final will be based on price \nDay of the delivery may vary",
-      comments: "Test Comments"
+      comments: "Test Comments",
+      attachments: [
+        {
+          key: "1234.png",
+          icon: "image"
+        },
+        {
+          key: "abcas.pdf",
+          icon: "paperclip"
+        },
+        {
+          key: "124-131.jpg",
+          icon: "image"
+        },
+        {
+          key: "afuag.jpg",
+          icon: "image"
+        },
+        {
+          key: "asgome.pdf",
+          icon: "paperclip"
+        },
+        {
+          key: "2423.pdf",
+          icon: "paperclip"
+        },
+        {
+          key: "5424.pdf",
+          icon: "paperclip"
+        }
+      ]
     };
   }
+
+  renderItem = ({ item, index }) => {
+    if (item.empty === true) {
+      return (
+        <View style={[styles.flatListItem, styles.flatListItemInvisible]} />
+      );
+    }
+    return (
+      <View style={styles.flatListItem}>
+        <TouchableOpacity style={styles.flatListItem}>
+          <View>
+            <Icon
+              name={item.icon}
+              type="evilicon"
+              size={30}
+              color={global.themeColor}
+            />
+            <Text style={styles.flatListItemText}>{item.key}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   render() {
     const { multipleSelect, activeSections, checked } = this.state;
@@ -146,6 +201,15 @@ export default class PurchaseRequisitionHeader extends Component {
                       style={{ alignSelf: "flex-start" }}
                     />
                   </Item>
+                  <Label style={{ paddingLeft: 15, paddingTop: 10 }}>Attachments</Label>
+                  <ScrollView horizontal style={{ marginLeft: 20, marginBottom: 20, marginTop: 10, marginRight: 10, paddingBottom: 5 }}>
+                    <FlatList
+                      data={this.state.attachments}
+                      style={styles.flatList}
+                      renderItem={this.renderItem}
+                      horizontal
+                    />
+                  </ScrollView>
                 </Form>
               </ScrollView>
             </View>
@@ -182,5 +246,26 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "300",
     marginBottom: 20
+  },
+  flatList: {
+    flex: 1
+  },
+  flatListItem: {
+    backgroundColor: global.backgroundOffsetColor,
+    flex: 1,
+    margin: 5,
+    borderRadius: 10,
+    height: 100,
+    width: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    alignContent: "center"
+  },
+  flatListItemInvisible: {
+    backgroundColor: "transparent"
+  },
+  flatListItemText: {
+    color: global.foregroundColor,
+    fontSize: 12
   }
 });
