@@ -5,13 +5,15 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
+  ActivityIndicator,
   TouchableOpacity
 } from "react-native";
 import { Button } from "native-base";
 import { ListItem, Icon, SearchBar } from "react-native-elements";
 import Accordion from "react-native-collapsible/Accordion";
 import { Col, Row, Grid } from "react-native-easy-grid";
+import { getUserInfo } from "../../services/GetPurchaseRequisitions";
+import axios from "axios";
 
 const CONTENT = [
   {
@@ -129,6 +131,26 @@ const CONTENT = [
   }
 ];
 
+function getJsonData() {
+  return fetch(
+    "https://gist.githubusercontent.com/mamodom/90a441ac8dababa7b68015a9b506fee5/raw/69e247f03b5732b359b7e258ecae47f8e078131a/foo.json"
+  )
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(json) {
+      return {
+        lista: json.lista
+      };
+    })
+    .catch(function(error) {
+      console.log(
+        "There has been a problem with your fetch operation: " + error.message
+      );
+      throw error;
+    });
+}
+
 export default class PendingApprovals extends Component {
   constructor(props) {
     super(props);
@@ -136,8 +158,25 @@ export default class PendingApprovals extends Component {
       activeSections: [],
       collapsed: true,
       multipleSelect: false,
-      checked: false
+      checked: false,
+      content: [],
+      filteredContent: [],
+      loading: true,
+      showLoadMore: false
     };
+  }
+
+  componentDidMount() {
+    getUserInfo("prabash", "test").then(res => {
+      const content = res.data;
+      this.setState({
+        content: content,
+        filteredContent: content,
+        loading: false,
+        showLoadMore: true
+      });
+      console.log(res.data);
+    });
   }
 
   checkOnValueChange = value => {
@@ -160,6 +199,23 @@ export default class PendingApprovals extends Component {
     this.setState({
       activeSections: sections.includes(undefined) ? [] : sections
     });
+  };
+
+  searchPendingApprovals = value => {
+    value == ""
+      ? this.setState({ showLoadMore: true })
+      : this.setState({ showLoadMore: false });
+
+    // get content (where all the data is) and filter it
+    //const filterData = this.state.content.filter(field => (field.PRNo.toLowerCase().startsWith(value.toLowerCase()) || field.PRDate.toLowerCase().startsWith(value.toLowerCase())));
+    const filterData = this.state.content.filter(
+      field =>
+        field.PRNo.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
+        field.PRDate.toLowerCase().indexOf(value.toLowerCase()) !== -1
+    );
+    // add the filteredContent to the respective state variable
+    const filteredContent = filterData;
+    this.setState({ filteredContent });
   };
 
   renderHeader = (section, _, isActive) => {
@@ -214,6 +270,31 @@ export default class PendingApprovals extends Component {
 
   render() {
     const { multipleSelect, activeSections, checked } = this.state;
+    // If the data is still loading, return the activity indicator view with heading
+    if (this.state.loading) {
+      return (
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
+              Pending
+            </Text>
+            <Text style={{ fontSize: 30, fontWeight: "100" }}>
+              &nbsp;Approvals
+            </Text>
+          </View>
+          <View style={styles.activityIndicatorContainer}>
+            <ActivityIndicator
+              animating={this.state.loading}
+              hidesWhenStopped={true}
+              color={global.accentColor}
+              size="large"
+              style={styles.activityIndicator}
+            />
+          </View>
+        </View>
+      );
+    }
+    // else rreturn the loaded view
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
@@ -231,6 +312,7 @@ export default class PendingApprovals extends Component {
             placeholder="Search PRs..."
             containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
             inputStyle={{ backgroundColor: global.backgroundColor }}
+            onChangeText={text => this.searchPendingApprovals(text)}
             round
           />
         </View>
@@ -240,13 +322,31 @@ export default class PendingApprovals extends Component {
               <ScrollView style={styles.accordianContainer}>
                 <Accordion
                   activeSections={activeSections}
-                  sections={CONTENT}
+                  sections={this.state.filteredContent}
                   expandMultiple={multipleSelect}
                   renderHeader={this.renderHeader}
                   renderContent={this.renderContent}
                   duration={400}
                   onChange={this.setSections}
                 />
+                {this.state.showLoadMore ? (
+                  <View
+                    style={{ alignItems: "center", justifyContent: "center" }}
+                  >
+                    <TouchableOpacity>
+                      <Text
+                        style={{
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginTop: 10,
+                          marginBottom: 10
+                        }}
+                      >
+                        Load More...
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
               </ScrollView>
 
               <View style={styles.buttonContainer}>
@@ -275,6 +375,16 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     backgroundColor: global.backgroundColor
+  },
+  activityIndicatorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center"
+  },
+  activityIndicator: {
+    justifyContent: "center",
+    alignItems: "center"
   },
   headerContainer: {
     flexDirection: "row",
