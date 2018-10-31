@@ -169,6 +169,15 @@ export default class PendingApprovals extends Component {
   componentDidMount() {
     getUserInfo("prabash", "test").then(res => {
       const content = res.data;
+      for(var i = 0; i < res.data.length; i++) {
+          var obj = res.data[i];
+          obj.PRHeaderChecked = false;
+          for (var j=0; j< obj.lines.length; j++)
+          {
+            var line = obj.lines[j];
+            line.PRLineChecked = false;
+          }
+      }
       this.setState({
         content: content,
         filteredContent: content,
@@ -179,9 +188,85 @@ export default class PendingApprovals extends Component {
     });
   }
 
-  checkOnValueChange = value => {
-    this.setState({ checked: value });
-    console.log("Switch 1 is: " + value);
+  checkOnPRHeaderValueChange = (value, PRNo) => {
+    console.log("Value: " + value);
+    console.log("PRNo: " + PRNo);
+
+    const content = this.state.content;
+    for(var i = 0; i < content.length; i++) {
+      var obj = content[i];
+      if (obj.PRNo === PRNo)
+      {
+        obj.PRHeaderChecked = value;
+        for (var j=0; j< obj.lines.length; j++)
+        {
+          var line = obj.lines[j];
+          line.PRLineChecked = value;
+        }
+      }
+    }
+    
+    const filteredContent = this.state.filteredContent;
+    for(var i = 0; i < filteredContent.length; i++) {
+      var obj = filteredContent[i];
+      if (obj.PRNo === PRNo)
+      {
+        obj.PRHeaderChecked = value;
+        for (var j=0; j< obj.lines.length; j++)
+        {
+          var line = obj.lines[j];
+          line.PRLineChecked = value;
+        }
+      }
+    }
+    
+    this.setState({
+      content: content,
+      filteredContent: filteredContent,
+    });
+  };
+
+  checkOnPRLineValueChange = (value, PRNo, PRLineNo) => {
+    console.log("Value: " + value);
+    console.log("PRNo: " + PRNo);
+    console.log("PRLineNo: " + PRLineNo);
+
+    const content = this.state.content;
+    for(var i = 0; i < content.length; i++) {
+      var obj = content[i];
+      if (obj.PRNo === PRNo)
+      {
+        for (var j=0; j< obj.lines.length; j++)
+        {
+          var line = obj.lines[j];
+          if(line.lineItemNo == PRLineNo)
+          {
+            line.PRLineChecked = value;
+          }
+        }
+      }
+    }
+    
+    const filteredContent = this.state.filteredContent;
+    for(var i = 0; i < filteredContent.length; i++) {
+      var obj = filteredContent[i];
+      if (obj.PRNo === PRNo)
+      {
+        for (var j=0; j< obj.lines.length; j++)
+        {
+          var line = obj.lines[j];
+          if(line.lineItemNo == PRLineNo)
+          {
+            line.PRLineChecked = value;
+          }
+        }
+      }
+    }
+    
+    this.setState({
+      content: content,
+      filteredContent: filteredContent,
+    });
   };
 
   toggleExpanded = () => {
@@ -240,6 +325,8 @@ export default class PendingApprovals extends Component {
           />
         }
         switchButton
+        switched={section.PRHeaderChecked}
+        onSwitch={(value) => this.checkOnPRHeaderValueChange(value, section.PRNo)}
         hideChevron
       />
     );
@@ -263,6 +350,8 @@ export default class PendingApprovals extends Component {
           />
         }
         switchButton
+        switched={lineItem.PRLineChecked}
+        onSwitch={(value)=> this.checkOnPRLineValueChange(value, section.PRNo, lineItem.lineItemNo)}
         hideChevron
       />
     ));
@@ -310,10 +399,11 @@ export default class PendingApprovals extends Component {
             lightTheme
             icon={{ type: "evilicons", name: "search" }}
             placeholder="Search PRs..."
-            containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
-            inputStyle={{ backgroundColor: global.backgroundColor }}
+            containerStyle={{ backgroundColor: global.backgroundOffsetColor}}
+            inputStyle={{ backgroundColor: global.backgroundColor}}
             onChangeText={text => this.searchPendingApprovals(text)}
             round
+            clearIcon
           />
         </View>
         <Grid style={styles.bodyContainer}>
@@ -396,7 +486,7 @@ const styles = StyleSheet.create({
   },
   searchBarContainer: {
     marginBottom: 10,
-    backgroundColor: "blue"
+    backgroundColor: "blue",
   },
   bodyContainer: {
     flex: 1

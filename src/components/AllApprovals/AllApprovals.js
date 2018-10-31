@@ -245,6 +245,7 @@ export default class PendingApprovals extends Component {
             containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
             inputStyle={{ backgroundColor: global.backgroundColor }}
             round
+            clearIcon
           />
         </View>
         <View style={{ flexDirection: "row" }}>
