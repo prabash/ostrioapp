@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableHighlight
+} from "react-native";
 import { ListItem, Icon, SearchBar } from "react-native-elements";
 import { Button } from "native-base";
 import Accordion from "react-native-collapsible/Accordion";
@@ -142,7 +148,11 @@ export default class PendingApprovals extends Component {
       activeSections: [],
       collapsed: true,
       multipleSelect: false,
-      checked: false
+      checked: false,
+      allFilterPressed: false,
+      pendingFilterPressed: false,
+      approvedFilterPressed: false,
+      rejectedFilterPressed: false
     };
   }
 
@@ -157,13 +167,67 @@ export default class PendingApprovals extends Component {
     )
   };
 
-  checkOnValueChange = value => {
-    this.setState({ checked: value });
-    console.log("Switch 1 is: " + value);
-  };
-
-  toggleExpanded = () => {
-    this.setState({ collapsed: !this.state.collapsed });
+  togglePressStatus = buttonType => {
+    if (buttonType === "All") {
+      this.setState(
+        { allFilterPressed: !this.state.allFilterPressed },
+        function() {
+          if (this.state.allFilterPressed) {
+            this.setState({
+              pendingFilterPressed: false,
+              approvedFilterPressed: false,
+              rejectedFilterPressed: false
+            });
+          }
+        }
+      );
+    }
+    if (buttonType === "Pending") {
+      this.setState(
+        { pendingFilterPressed: !this.state.pendingFilterPressed },
+        function() {
+          if (this.state.pendingFilterPressed) {
+            this.setState({
+              allFilterPressed: false,
+              approvedFilterPressed: false,
+              rejectedFilterPressed: false
+            });
+          }
+        }
+      );
+    }
+    if (buttonType === "Approved") {
+      this.setState(
+        {
+          approvedFilterPressed: !this.state.approvedFilterPressed
+        },
+        function() {
+          if (this.state.approvedFilterPressed) {
+            this.setState({
+              allFilterPressed: false,
+              pendingFilterPressed: false,
+              rejectedFilterPressed: false
+            });
+          }
+        }
+      );
+    }
+    if (buttonType === "Rejected") {
+      this.setState(
+        {
+          rejectedFilterPressed: !this.state.rejectedFilterPressed
+        },
+        function() {
+          if (this.state.rejectedFilterPressed) {
+            this.setState({
+              allFilterPressed: false,
+              pendingFilterPressed: false,
+              approvedFilterPressed: false
+            });
+          }
+        }
+      );
+    }
   };
 
   setSections = sections => {
@@ -250,51 +314,109 @@ export default class PendingApprovals extends Component {
         </View>
         <View style={{ flexDirection: "row" }}>
           <View style={styles.filterButtonView}>
-            <Button
-              rounded
-              style={[
-                styles.filterButton,
-                { borderColor: "#3867d6", borderWidth: 2 }
-              ]}
+            <TouchableHighlight
+              activeOpacity={1}
+              onPress={() => this.togglePressStatus("All")}
+              style={
+                !this.state.allFilterPressed
+                  ? [styles.filterButton, styles.allFilterButtonNotPressed]
+                  : [styles.filterButton, styles.allFilterButtonPressed]
+              }
             >
-              <Text style={{ color: "#3867d6" }}>All</Text>
-            </Button>
+              <Text
+                style={
+                  !this.state.allFilterPressed
+                    ? [
+                        styles.filterButtonText,
+                        { color: global.prAllFilterColor }
+                      ]
+                    : [
+                        styles.filterButtonText,
+                        { color: global.backgroundColor }
+                      ]
+                }
+              >
+                All
+              </Text>
+            </TouchableHighlight>
           </View>
           <View style={styles.filterButtonView}>
-            <Button
-              rounded
-              danger
-              style={[
-                styles.filterButton,
-                { borderColor: "#f1c40f", borderWidth: 2 }
-              ]}
+            <TouchableHighlight
+              onPress={() => this.togglePressStatus("Pending")}
+              style={
+                !this.state.pendingFilterPressed
+                  ? [styles.filterButton, styles.pendingFilterButtonNotPressed]
+                  : [styles.filterButton, styles.pendingFilterButtonPressed]
+              }
             >
-              <Text style={{ color: "#f1c40f" }}>Pending</Text>
-            </Button>
+              <Text
+                style={
+                  !this.state.pendingFilterPressed
+                    ? [
+                        styles.filterButtonText,
+                        { color: global.prPendingFilterColor }
+                      ]
+                    : [
+                        styles.filterButtonText,
+                        { color: global.backgroundColor }
+                      ]
+                }
+              >
+                Pending
+              </Text>
+            </TouchableHighlight>
           </View>
           <View style={styles.filterButtonView}>
-            <Button
-              rounded
-              success
-              style={[
-                styles.filterButton,
-                { borderColor: "#20bf6b", borderWidth: 2 }
-              ]}
+            <TouchableHighlight
+              onPress={() => this.togglePressStatus("Approved")}
+              style={
+                !this.state.approvedFilterPressed
+                  ? [styles.filterButton, styles.approvedFilterButtonNotPressed]
+                  : [styles.filterButton, styles.approvedFilterButtonPressed]
+              }
             >
-              <Text style={{ color: "#20bf6b" }}>Approved</Text>
-            </Button>
+              <Text
+                style={
+                  !this.state.approvedFilterPressed
+                    ? [
+                        styles.filterButtonText,
+                        { color: global.prApprovedFilterColor }
+                      ]
+                    : [
+                        styles.filterButtonText,
+                        { color: global.backgroundColor }
+                      ]
+                }
+              >
+                Approved
+              </Text>
+            </TouchableHighlight>
           </View>
           <View style={styles.filterButtonView}>
-            <Button
-              rounded
-              danger
-              style={[
-                styles.filterButton,
-                { borderColor: "#fc5c65", borderWidth: 2 }
-              ]}
+            <TouchableHighlight
+              onPress={() => this.togglePressStatus("Rejected")}
+              style={
+                !this.state.rejectedFilterPressed
+                  ? [styles.filterButton, styles.rejectedFilterButtonNotPressed]
+                  : [styles.filterButton, styles.rejectedFilterButtonPressed]
+              }
             >
-              <Text style={{ color: "#fc5c65" }}>Rejected</Text>
-            </Button>
+              <Text
+                style={
+                  !this.state.rejectedFilterPressed
+                    ? [
+                        styles.filterButtonText,
+                        { color: global.prRejectedFilterColor }
+                      ]
+                    : [
+                        styles.filterButtonText,
+                        { color: global.backgroundColor }
+                      ]
+                }
+              >
+                Rejected
+              </Text>
+            </TouchableHighlight>
           </View>
         </View>
         <Grid>
@@ -319,7 +441,7 @@ export default class PendingApprovals extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.flatten({
   container: {
     flex: 1,
     flexDirection: "column",
@@ -387,7 +509,39 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "90%",
     borderRadius: 50,
-    backgroundColor: global.backgroundColor
+    backgroundColor: global.backgroundColor,
+    borderWidth: 2
+  },
+  allFilterButtonNotPressed: {
+    borderColor: global.prAllFilterColor
+  },
+  allFilterButtonPressed: {
+    backgroundColor: global.prAllFilterColor,
+    borderColor: global.prAllFilterColor
+  },
+  pendingFilterButtonNotPressed: {
+    borderColor: global.prPendingFilterColor
+  },
+  pendingFilterButtonPressed: {
+    backgroundColor: global.prPendingFilterColor,
+    borderColor: global.prPendingFilterColor
+  },
+  approvedFilterButtonNotPressed: {
+    borderColor: global.prApprovedFilterColor
+  },
+  approvedFilterButtonPressed: {
+    backgroundColor: global.prApprovedFilterColor,
+    borderColor: global.prApprovedFilterColor
+  },
+  rejectedFilterButtonNotPressed: {
+    borderColor: global.prRejectedFilterColor
+  },
+  rejectedFilterButtonPressed: {
+    backgroundColor: global.prRejectedFilterColor,
+    borderColor: global.prRejectedFilterColor
+  },
+  filterButtonText: {
+    padding: 5
   },
   listContent: {
     padding: 20,
