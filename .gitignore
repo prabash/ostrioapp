@@ -82,7 +82,6 @@ local.properties
 /android/app/build
 
 # Ios
-/ios/
 
 # node-waf configuration
 .lock-wscript
