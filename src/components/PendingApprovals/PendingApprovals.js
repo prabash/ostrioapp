@@ -8,128 +8,12 @@ import {
   ActivityIndicator,
   TouchableOpacity
 } from "react-native";
-import { Button } from "native-base";
+import { Button, Header, Left, Body, Right, Item, Input } from "native-base";
 import { ListItem, Icon, SearchBar } from "react-native-elements";
 import Accordion from "react-native-collapsible/Accordion";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { getUserInfo } from "../../services/GetPurchaseRequisitions";
+import { getAllPRInfo } from "../../services/GetPurchaseRequisitions";
 import axios from "axios";
-
-const CONTENT = [
-  {
-    PRNo: "OTT/150000",
-    PRDate: "31/12/2018",
-    Status: "Pending",
-    lines: [
-      {
-        lineItemNo: 1,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-001"
-      },
-      {
-        lineItemNo: 2,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-001"
-      }
-    ]
-  },
-  {
-    PRNo: "OTT-150001",
-    PRDate: "14/12/2018",
-    Status: "Pending",
-    lines: [
-      {
-        lineItemNo: 1,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-002"
-      },
-      {
-        lineItemNo: 2,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-002"
-      },
-      {
-        lineItemNo: 3,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-002"
-      },
-      {
-        lineItemNo: 4,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-002"
-      }
-    ]
-  },
-  {
-    PRNo: "OTT-150002",
-    PRDate: "25/10/2018",
-    Status: "Pending",
-    lines: [
-      {
-        lineItemNo: 1,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-003"
-      },
-      {
-        lineItemNo: 2,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-003"
-      },
-      {
-        lineItemNo: 3,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-003"
-      }
-    ]
-  },
-  {
-    PRNo: "OTT-150003",
-    PRDate: "31/11/2018",
-    Status: "Pending",
-    lines: [
-      {
-        lineItemNo: 1,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-004"
-      },
-      {
-        lineItemNo: 2,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-004"
-      }
-    ]
-  },
-  {
-    PRNo: "OTT-150004",
-    PRDate: "31/10/2018",
-    Status: "Pending",
-    lines: [
-      {
-        lineItemNo: 1,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-005"
-      },
-      {
-        lineItemNo: 2,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-005"
-      }
-    ]
-  }
-];
 
 function getJsonData() {
   return fetch(
@@ -167,16 +51,15 @@ export default class PendingApprovals extends Component {
   }
 
   componentDidMount() {
-    getUserInfo("prabash", "test").then(res => {
+    getAllPRInfo("prabash", "test").then(res => {
       const content = res.data;
-      for(var i = 0; i < res.data.length; i++) {
-          var obj = res.data[i];
-          obj.PRHeaderChecked = false;
-          for (var j=0; j< obj.lines.length; j++)
-          {
-            var line = obj.lines[j];
-            line.PRLineChecked = false;
-          }
+      for (var i = 0; i < res.data.length; i++) {
+        var obj = res.data[i];
+        obj.PRHeaderChecked = false;
+        for (var j = 0; j < obj.PRDetailMasters.length; j++) {
+          var line = obj.PRDetailMasters[j];
+          line.PRLineChecked = false;
+        }
       }
       this.setState({
         content: content,
@@ -188,84 +71,74 @@ export default class PendingApprovals extends Component {
     });
   }
 
-  checkOnPRHeaderValueChange = (value, PRNo) => {
+  checkOnPRHeaderValueChange = (value, PRNumber) => {
     console.log("Value: " + value);
-    console.log("PRNo: " + PRNo);
+    console.log("PRNo: " + PRNumber);
 
     const content = this.state.content;
-    for(var i = 0; i < content.length; i++) {
+    for (var i = 0; i < content.length; i++) {
       var obj = content[i];
-      if (obj.PRNo === PRNo)
-      {
+      if (obj.PRNumber === PRNumber) {
         obj.PRHeaderChecked = value;
-        for (var j=0; j< obj.lines.length; j++)
-        {
-          var line = obj.lines[j];
+        for (var j = 0; j < obj.PRDetailMasters.length; j++) {
+          var line = obj.PRDetailMasters[j];
           line.PRLineChecked = value;
         }
       }
     }
-    
+
     const filteredContent = this.state.filteredContent;
-    for(var i = 0; i < filteredContent.length; i++) {
+    for (var i = 0; i < filteredContent.length; i++) {
       var obj = filteredContent[i];
-      if (obj.PRNo === PRNo)
-      {
+      if (obj.PRNumber === PRNumber) {
         obj.PRHeaderChecked = value;
-        for (var j=0; j< obj.lines.length; j++)
-        {
-          var line = obj.lines[j];
+        for (var j = 0; j < obj.PRDetailMasters.length; j++) {
+          var line = obj.PRDetailMasters[j];
           line.PRLineChecked = value;
         }
       }
     }
-    
+
     this.setState({
       content: content,
-      filteredContent: filteredContent,
+      filteredContent: filteredContent
     });
   };
 
-  checkOnPRLineValueChange = (value, PRNo, PRLineNo) => {
+  checkOnPRLineValueChange = (value, PRNumber, PRLine) => {
     console.log("Value: " + value);
-    console.log("PRNo: " + PRNo);
-    console.log("PRLineNo: " + PRLineNo);
+    console.log("PRNumber: " + PRNumber);
+    console.log("PRLine: " + PRLine);
 
     const content = this.state.content;
-    for(var i = 0; i < content.length; i++) {
+    for (var i = 0; i < content.length; i++) {
       var obj = content[i];
-      if (obj.PRNo === PRNo)
-      {
-        for (var j=0; j< obj.lines.length; j++)
-        {
-          var line = obj.lines[j];
-          if(line.lineItemNo == PRLineNo)
-          {
+      if (obj.PRNumber === PRNumber) {
+        for (var j = 0; j < obj.PRDetailMasters.length; j++) {
+          var line = obj.PRDetailMasters[j];
+          if (line.PRLine == PRLine) {
             line.PRLineChecked = value;
           }
         }
       }
     }
-    
+
     const filteredContent = this.state.filteredContent;
-    for(var i = 0; i < filteredContent.length; i++) {
+    for (var i = 0; i < filteredContent.length; i++) {
       var obj = filteredContent[i];
-      if (obj.PRNo === PRNo)
-      {
-        for (var j=0; j< obj.lines.length; j++)
-        {
-          var line = obj.lines[j];
-          if(line.lineItemNo == PRLineNo)
-          {
+      if (obj.PRNumber === PRNumber) {
+        for (var j = 0; j < obj.PRDetailMasters.length; j++) {
+          var line = obj.PRDetailMasters[j];
+          if (line.PRLine == PRLine) {
             line.PRLineChecked = value;
           }
         }
       }
     }
-    
+
     this.setState({
       content: content,
-      filteredContent: filteredContent,
+      filteredContent: filteredContent
     });
   };
 
@@ -273,11 +146,14 @@ export default class PendingApprovals extends Component {
     this.setState({ collapsed: !this.state.collapsed });
   };
 
-  onLongPressHeader = itemId => {
-    this.props.navigation.navigate("PurchaseRequisitionHeader");
+  onPressHeader = PRHeaderId => {
+    this.props.navigation.navigate("PurchaseRequisitionHeader", { PRHeaderId });
   };
-  onLongPressLine = itemId => {
-    this.props.navigation.navigate("PurchaseRequisitionLine");
+  onPressLine = (PRHeaderId, PRLineId) => {
+    this.props.navigation.navigate("PurchaseRequisitionLine", {
+      PRHeaderId,
+      PRLineId
+    });
   };
 
   setSections = sections => {
@@ -295,8 +171,8 @@ export default class PendingApprovals extends Component {
     //const filterData = this.state.content.filter(field => (field.PRNo.toLowerCase().startsWith(value.toLowerCase()) || field.PRDate.toLowerCase().startsWith(value.toLowerCase())));
     const filterData = this.state.content.filter(
       field =>
-        field.PRNo.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
-        field.PRDate.toLowerCase().indexOf(value.toLowerCase()) !== -1
+        field.PRNumber.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
+        field.PR_Date.toLowerCase().indexOf(value.toLowerCase()) !== -1
     );
     // add the filteredContent to the respective state variable
     const filteredContent = filterData;
@@ -306,13 +182,13 @@ export default class PendingApprovals extends Component {
   renderHeader = (section, _, isActive) => {
     return (
       <ListItem
-        title={`PR No: ${section.PRNo}`}
+        title={`PR No: ${section.PRNumber}`}
         titleStyle={styles.listHeaderText}
-        subtitle={`PR Date: ${section.PRDate} \n Status: ${section.Status}`}
+        subtitle={`PR Date: ${section.PR_Date} \n Status: ${section.Status}`}
         subtitleStyle={styles.lineItemSubtitle}
-        key={section.PRNo}
+        key={section.PRNumber}
         badge={{
-          value: section.lines.length,
+          value: section.PRDetailMasters.length,
           textStyle: { color: global.foregroundColor },
           containerStyle: { backgroundColor: global.accentColor }
         }}
@@ -321,37 +197,45 @@ export default class PendingApprovals extends Component {
             name="cart"
             type="evilicon"
             color={global.foregroundColor}
-            onPress={() => this.onLongPressHeader(section.PRNo)}
+            onPress={() => this.onPressHeader(section.ID)}
           />
         }
         switchButton
         switched={section.PRHeaderChecked}
-        onSwitch={(value) => this.checkOnPRHeaderValueChange(value, section.PRNo)}
+        onSwitch={value =>
+          this.checkOnPRHeaderValueChange(value, section.PRNumber)
+        }
         hideChevron
       />
     );
   };
 
   renderContent = (section, _, isActive) => {
-    return section.lines.map(lineItem => (
+    return section.PRDetailMasters.map(lineItem => (
       <ListItem
         containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
-        title={lineItem.lineItemNo + " : " + lineItem.StockCode}
+        title={lineItem.PRLine + " : " + lineItem.StockCode}
         titleStyle={styles.lineItemTitle}
-        key={lineItem.lineItemNo}
-        subtitle={`Vendor: ${lineItem.Vendor}`}
+        key={lineItem.PRLine}
+        subtitle={`Vendor: ${lineItem.VendorID}`}
         subtitleStyle={styles.lineItemSubtitle}
         leftIcon={
           <Icon
             name="archive"
             type="evilicon"
             color={global.foregroundColor}
-            onPress={() => this.onLongPressLine(lineItem.lineItemNo)}
+            onPress={() => this.onPressLine(section.ID, lineItem.ID)}
           />
         }
         switchButton
         switched={lineItem.PRLineChecked}
-        onSwitch={(value)=> this.checkOnPRLineValueChange(value, section.PRNo, lineItem.lineItemNo)}
+        onSwitch={value =>
+          this.checkOnPRLineValueChange(
+            value,
+            section.PRNumber,
+            lineItem.PRLine
+          )
+        }
         hideChevron
       />
     ));
@@ -399,8 +283,8 @@ export default class PendingApprovals extends Component {
             lightTheme
             icon={{ type: "evilicons", name: "search" }}
             placeholder="Search PRs..."
-            containerStyle={{ backgroundColor: global.backgroundOffsetColor}}
-            inputStyle={{ backgroundColor: global.backgroundColor}}
+            containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
+            inputStyle={{ backgroundColor: global.backgroundColor }}
             onChangeText={text => this.searchPendingApprovals(text)}
             round
             clearIcon
@@ -438,7 +322,6 @@ export default class PendingApprovals extends Component {
                   </View>
                 ) : null}
               </ScrollView>
-
               <View style={styles.buttonContainer}>
                 <View style={styles.approveRejectButtonsView}>
                   <Button ful success style={styles.approveRejectButton}>
@@ -486,7 +369,7 @@ const styles = StyleSheet.create({
   },
   searchBarContainer: {
     marginBottom: 10,
-    backgroundColor: "blue",
+    backgroundColor: "blue"
   },
   bodyContainer: {
     flex: 1
