@@ -12,7 +12,10 @@ import { Button, Header, Left, Body, Right, Item, Input } from "native-base";
 import { ListItem, Icon, SearchBar } from "react-native-elements";
 import Accordion from "react-native-collapsible/Accordion";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { getAllPRInfo } from "../../services/GetPurchaseRequisitions";
+import {
+  getAllPRInfo,
+  getPRInfoPaging
+} from "../../services/GetPurchaseRequisitions";
 import axios from "axios";
 
 function getJsonData() {
@@ -35,6 +38,7 @@ function getJsonData() {
     });
 }
 
+var skip = 0;
 export default class PendingApprovals extends Component {
   constructor(props) {
     super(props);
@@ -46,29 +50,54 @@ export default class PendingApprovals extends Component {
       content: [],
       filteredContent: [],
       loading: true,
+      loadMoreBusy: false,
       showLoadMore: false
     };
   }
 
   componentDidMount() {
-    getAllPRInfo("prabash", "test").then(res => {
-      const content = res.data;
-      for (var i = 0; i < res.data.length; i++) {
-        var obj = res.data[i];
+    this.loadPendingApprovals();
+  }
+
+  loadPendingApprovals = () => {
+    this.setState({ loadMoreBusy: true });
+    getPRInfoPaging(skip, global.prTakeValue).then(res => {
+      const jsonArray = JSON.parse(res.data);
+
+      if (jsonArray.length == global.prTakeValue) {
+        skip += global.prTakeValue;
+        var showLoadMore = true;
+      } else {
+        var showLoadMore = false;
+      }
+      console.log("+++++++++++ skip " + skip);
+      this.setState({ showLoadMore });
+
+      console.log(jsonArray);
+      for (var i = 0; i < jsonArray.length; i++) {
+        var obj = jsonArray[i];
         obj.PRHeaderChecked = false;
         for (var j = 0; j < obj.PRDetailMasters.length; j++) {
           var line = obj.PRDetailMasters[j];
           line.PRLineChecked = false;
         }
       }
+
+      var currentContent = this.state.content;
+      var content = currentContent.concat(jsonArray);
+
       this.setState({
         content: content,
         filteredContent: content,
         loading: false,
-        showLoadMore: true
+        loadMoreBusy: false
       });
-      console.log(res.data);
     });
+    console.log("+++ DATA LOADED!");
+  };
+
+  testMethod(text) {
+    alert(text);
   }
 
   checkOnPRHeaderValueChange = (value, PRNumber) => {
@@ -179,6 +208,21 @@ export default class PendingApprovals extends Component {
     this.setState({ filteredContent });
   };
 
+  static navigationOptions = {
+    headerTitle: (
+      <SearchBar
+        lightTheme
+        icon={{ type: "evilicons", name: "search" }}
+        placeholder="Search PRs..."
+        containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
+        inputStyle={{ backgroundColor: global.backgroundColor }}
+        onChangeText={text => this.searchPendingApprovals(text)}
+        round
+        clearIcon
+      />
+    )
+  };
+
   renderHeader = (section, _, isActive) => {
     return (
       <ListItem
@@ -214,7 +258,7 @@ export default class PendingApprovals extends Component {
     return section.PRDetailMasters.map(lineItem => (
       <ListItem
         containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
-        title={lineItem.PRLine + " : " + lineItem.StockCode}
+        title={lineItem.PRLine + " : " + lineItem.StockDesc}
         titleStyle={styles.lineItemTitle}
         key={lineItem.PRLine}
         subtitle={`Vendor: ${lineItem.VendorID}`}
@@ -242,7 +286,12 @@ export default class PendingApprovals extends Component {
   };
 
   render() {
-    const { multipleSelect, activeSections, checked } = this.state;
+    const {
+      multipleSelect,
+      activeSections,
+      filteredContent,
+      checked
+    } = this.state;
     // If the data is still loading, return the activity indicator view with heading
     if (this.state.loading) {
       return (
@@ -296,7 +345,7 @@ export default class PendingApprovals extends Component {
               <ScrollView style={styles.accordianContainer}>
                 <Accordion
                   activeSections={activeSections}
-                  sections={this.state.filteredContent}
+                  sections={filteredContent}
                   expandMultiple={multipleSelect}
                   renderHeader={this.renderHeader}
                   renderContent={this.renderContent}
@@ -307,18 +356,30 @@ export default class PendingApprovals extends Component {
                   <View
                     style={{ alignItems: "center", justifyContent: "center" }}
                   >
-                    <TouchableOpacity>
-                      <Text
-                        style={{
-                          alignItems: "center",
-                          justifyContent: "center",
-                          marginTop: 10,
-                          marginBottom: 10
-                        }}
+                    {this.state.loadMoreBusy ? (
+                      <ActivityIndicator
+                        animating={this.state.loadMoreBusy}
+                        hidesWhenStopped={true}
+                        color={global.accentColor}
+                        size="large"
+                        style={styles.activityIndicator}
+                      />
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() => this.loadPendingApprovals()}
                       >
-                        Load More...
-                      </Text>
-                    </TouchableOpacity>
+                        <Text
+                          style={{
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginTop: 10,
+                            marginBottom: 10
+                          }}
+                        >
+                          Load More...
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 ) : null}
               </ScrollView>

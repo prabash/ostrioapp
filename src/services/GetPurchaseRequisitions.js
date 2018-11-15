@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const mainURL = `http://dmsuat.eastus.cloudapp.azure.com/OSTRIOMobile/PRAppService/PRDataService.svc/`;
+
 export const getAllPRInfo = (name, test) => {
     let username = name.toLowerCase().trim();
     console.log("username :" + username);
@@ -16,5 +18,10 @@ export const getPRHeaderById = (PRHeaderId) => {
 
 export const getPRLineById = (PRHeaderId, PRLineId) => {
     const URL = `http://demo9906147.mockable.io/get/PRLine/`;
+    return axios.get(URL).then(res => res);
+}
+
+export const getPRInfoPaging = (skip, take) => {
+    const URL = mainURL + `GetPRDetails/${skip}/${take}`;
     return axios.get(URL).then(res => res);
 }

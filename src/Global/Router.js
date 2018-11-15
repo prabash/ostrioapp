@@ -32,42 +32,45 @@ export const SignedIn = createStackNavigator(
       screen: HomePage,
       navigationOptions: {
         tabBarLabel: "Home",
+        header: null
       }
     },
     PurchaseRequisitionsMenu: {
       screen: PurchaseRequisitionsMenu,
       navigationOptions: {
         tabBarLabel: "Purchase Requisitons",
+        header: null
       }
     },
     PendingApprovals : {
       screen : PendingApprovals,
       navigationOptions: {
         tabBarLabel: "Pending Approvals",
+        header: null
       }
     },
     AllApprovals : {
       screen : AllApprovals,
       navigationOptions: {
         tabBarLabel: "All Approvals",
+        header: null
       }
     },
     PurchaseRequisitionHeader: {
       screen: PurchaseRequisitionHeader,
       navigationOptions: {
         tabBarLabel: "Purchase Req. Header",
+        header: null
       }
     },
     PurchaseRequisitionLine: {
       screen: PurchaseRequisitionLine,
       navigationOptions: {
         tabBarLabel: "Purchase Req. Line",
+        header: null
       }
     },
   },
-  {
-    headerMode: "none"
-  }
 );
 
 export const createRootNavigator = (signedIn = false) => {
