@@ -5,7 +5,7 @@ const mainURL = `http://dmsuat.eastus.cloudapp.azure.com/`;
 export const login = (_username, _password) => {
   const loginURL = `filemanagement/user_management/users/login`;
 
-  axios.post(
+  return axios.post(
     mainURL + loginURL,
     {
       username: _username,
@@ -16,7 +16,14 @@ export const login = (_username, _password) => {
         "Content-Type": "application/json"
       }
     }
-  ).then(res => {
-      console.log(res.data);
-  });
+  );
 };
+
+export const getUserInfo = (sessionKey) => {
+  const loginURL = `/filemanagement/user_management/profile/getProfile?userId=11`;
+  return axios.get(mainURL + loginURL, {
+    headers: {
+      "Authorization" : "Bearer "+ sessionKey
+    }
+  });
+}

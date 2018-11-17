@@ -10,7 +10,8 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { onSignOut } from "../../Global/Auth";
+import { onSignOut, getSessionKey } from "../../Global/Auth";
+import { getUserInfo } from "../../services/LoginService";
 
 const data = [
   {
@@ -77,11 +78,22 @@ export default class HomePage extends Component {
     this.state = { viewRef: null };
   }
 
+  componentDidMount() {
+    getSessionKey().then(res => {
+      console.log("ASYNC STORAGE KEY : " + res);
+      if (res !== null) {
+        getUserInfo(res).then(userInfo => {
+          console.log("USER INFO :" + userInfo.data.firstName);
+        });
+      }
+    });
+  }
+
   imageLoaded() {
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) });
   }
 
-  menuItemOnPress = (key) => {
+  menuItemOnPress = key => {
     console.log("+++++++++++++++++++++ " + key);
     if (key == "Logout") {
       onSignOut().then(() => this.props.navigation.navigate("SignedOut"));
@@ -104,7 +116,7 @@ export default class HomePage extends Component {
           onPress={() => this.menuItemOnPress(item.key)}
         >
           <Grid>
-            <Row size={2.5} >
+            <Row size={2.5}>
               <Col size={0.5} />
               <Col
                 size={5}
@@ -123,14 +135,26 @@ export default class HomePage extends Component {
               </Col>
               <Col size={2}>
                 <Grid>
-                  <Row/>
+                  <Row />
                   <Row>
-                    <View style={{ borderRadius: 10, backgroundColor: item.badgeColor, alignItems: "center", justifyContent: "center"}}>
-                      <Text style = {{ color : global.foregroundColor, fontSize: 11 }}> {item.count} </Text>
+                    <View
+                      style={{
+                        borderRadius: 10,
+                        backgroundColor: item.badgeColor,
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}
+                    >
+                      <Text
+                        style={{ color: global.foregroundColor, fontSize: 11 }}
+                      >
+                        {" "}
+                        {item.count}{" "}
+                      </Text>
                     </View>
                   </Row>
-                  <Row/>
-                  <Row/>
+                  <Row />
+                  <Row />
                 </Grid>
               </Col>
             </Row>

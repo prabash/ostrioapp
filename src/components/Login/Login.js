@@ -9,19 +9,44 @@ import {
   Image
 } from "react-native";
 import { Icon } from "react-native-elements";
+import Toast, { DURATION } from "react-native-easy-toast";
 import { onSignIn } from "../../Global/Auth";
-import { login } from "../../services/LoginService"
+import { login } from "../../services/LoginService";
 
 import Footer from "../Footer/Footer";
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      username: "",
+      password: ""
+    };
   }
-  
-  componentDidMount(){
-    login("ostrio", "admin@123");
-  }
+
+  getUsername = _username => {
+    this.setState({ username: _username });
+  };
+  getPassword = _password => {
+    this.setState({ password: _password });
+  };
+
+  loginUser = () => {
+    login(this.state.username, this.state.password).then(res => {
+      console.log(res.data);
+      if (res.data.status) {
+        console.log("SESSION_KEY: " + res.data.data);
+        onSignIn(res.data.data).then(() =>
+          this.props.navigation.navigate("SignedIn")
+        );
+      } else {
+        this.refs.toastWithStyle.show(
+          "Oops..Please check your username/password\nand try again!",
+          2000
+        );
+      }
+    });
+  };
 
   render() {
     return (
@@ -43,6 +68,7 @@ export default class Login extends Component {
                 placeholder="Username"
                 placeholderTextColor={global.foregroundColor}
                 returnKeyType="next"
+                onChangeText={value => this.getUsername(value)}
                 onSubmitEditing={() => this.passwordInput.focus()}
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -54,6 +80,7 @@ export default class Login extends Component {
               <TextInput
                 style={styles.input}
                 placeholder="Password"
+                onChangeText={value => this.getPassword(value)}
                 placeholderTextColor={global.foregroundColor}
                 secureTextEntry
                 returnKeyType="go"
@@ -63,9 +90,7 @@ export default class Login extends Component {
             <TouchableOpacity
               style={styles.signInBtnContainer}
               onPress={() => {
-                onSignIn().then(() =>
-                  this.props.navigation.navigate("SignedIn")
-                );
+                this.loginUser();
               }}
             >
               <Text style={styles.signInBtnText}>SIGN IN</Text>
@@ -78,6 +103,15 @@ export default class Login extends Component {
             </TouchableOpacity>
           </View>
         </View>
+        <Toast
+          ref="toastWithStyle"
+          style={{ backgroundColor: global.prRejectedFilterColor }}
+          position="bottom"
+          positionValue={360}
+          fadeInDuration={750}
+          fadeOutDuration={1000}
+        />
+
         <Footer />
       </View>
     );
@@ -87,11 +121,13 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
     backgroundColor: global.backgroundColor
   },
   logoContainer: {
     alignItems: "center",
-    flexGrow: 1,
+    flexGrow: 0.75,
     justifyContent: "center"
   },
   logo: {
