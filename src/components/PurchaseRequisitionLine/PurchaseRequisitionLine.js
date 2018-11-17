@@ -11,7 +11,7 @@ import {
 import { Form, Item, Input, Textarea, Label } from "native-base";
 import { ListItem, Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { getPRLineById } from "../../services/GetPurchaseRequisitions";
+import { getPRLineById } from "../../services/PurchaseRequisitionsService";
 
 export default class PurchaseRequisitionLine extends Component {
   constructor(props) {

@@ -15,7 +15,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import {
   getAllPRInfo,
   getPRInfoPaging
-} from "../../services/GetPurchaseRequisitions";
+} from "../../services/PurchaseRequisitionsService";
 import axios from "axios";
 
 function getJsonData() {

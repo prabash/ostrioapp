@@ -13,7 +13,7 @@ import {
 import { Form, Item, Input, Textarea, Label } from "native-base";
 import { ListItem, Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { getPRHeaderById } from "../../services/GetPurchaseRequisitions";
+import { getPRHeaderById } from "../../services/PurchaseRequisitionsService";
 
 const numColumns = 5;
 export default class PurchaseRequisitionHeader extends Component {

@@ -19,11 +19,11 @@ export const login = (_username, _password) => {
   );
 };
 
-export const getUserInfo = (sessionKey) => {
+export const getUserInfo = sessionKey => {
   const loginURL = `/filemanagement/user_management/profile/getProfile?userId=11`;
   return axios.get(mainURL + loginURL, {
     headers: {
-      "Authorization" : "Bearer "+ sessionKey
+      Authorization: "Bearer " + sessionKey
     }
   });
-}
+};
