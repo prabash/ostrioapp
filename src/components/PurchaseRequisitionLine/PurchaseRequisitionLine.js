@@ -48,10 +48,9 @@ export default class PurchaseRequisitionLine extends Component {
   }
 
   componentDidMount() {
-    var PRHeaderId = this.props.navigation.state.params.PRHeaderId;
     var PRLineId = this.props.navigation.state.params.PRLineId;
-    getPRLineById(PRHeaderId, PRLineId).then(res => {
-      const lineData = res.data;
+    getPRLineById(PRLineId).then(res => {
+      const lineData = JSON.parse(res.data);
       this.setState({ lineData: lineData, loading: false });
     });
   }

@@ -178,9 +178,8 @@ export default class PendingApprovals extends Component {
   onPressHeader = PRHeaderId => {
     this.props.navigation.navigate("PurchaseRequisitionHeader", { PRHeaderId });
   };
-  onPressLine = (PRHeaderId, PRLineId) => {
+  onPressLine = PRLineId => {
     this.props.navigation.navigate("PurchaseRequisitionLine", {
-      PRHeaderId,
       PRLineId
     });
   };
@@ -268,7 +267,7 @@ export default class PendingApprovals extends Component {
             name="archive"
             type="evilicon"
             color={global.foregroundColor}
-            onPress={() => this.onPressLine(section.ID, lineItem.ID)}
+            onPress={() => this.onPressLine(lineItem.ID)}
           />
         }
         switchButton

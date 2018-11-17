@@ -12,12 +12,12 @@ export const getAllPRInfo = (name, test) => {
 }
 
 export const getPRHeaderById = (PRHeaderId) => {
-    const URL = `http://demo9906147.mockable.io/get/PRHeader/`;
+    const URL = mainURL + `GetPRDetailsById/${PRHeaderId}/Header`;
     return axios.get(URL).then(res => res);
 }
 
-export const getPRLineById = (PRHeaderId, PRLineId) => {
-    const URL = `http://demo9906147.mockable.io/get/PRLine/`;
+export const getPRLineById = (PRLineId) => {
+    const URL = mainURL + `GetPRDetailsById/${PRLineId}/Detail`;
     return axios.get(URL).then(res => res);
 }
 

@@ -69,7 +69,7 @@ export default class PurchaseRequisitionHeader extends Component {
   componentDidMount() {
     var PRHeaderId = this.props.navigation.state.params.PRHeaderId;
     getPRHeaderById(PRHeaderId).then(res => {
-      const headerData = res.data;
+      const headerData = JSON.parse(res.data);
       this.setState({ headerData: headerData, loading: false }, function() {
         console.log(this.state.headerData);
         console.log("++++++++++ " + this.state.headerData.PRNumber);
