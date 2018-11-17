@@ -10,12 +10,17 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { onSignIn } from "../../Global/Auth";
+import { login } from "../../services/LoginService"
 
 import Footer from "../Footer/Footer";
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
+  }
+  
+  componentDidMount(){
+    login("ostrio", "admin@123");
   }
 
   render() {
