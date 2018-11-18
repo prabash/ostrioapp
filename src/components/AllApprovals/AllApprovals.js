@@ -4,143 +4,22 @@ import {
   StyleSheet,
   Text,
   View,
+  ActivityIndicator,
+  TouchableOpacity,
   TouchableHighlight
 } from "react-native";
+import {
+  getPRInfoPaging,
+  getAllPRInfo
+} from "../../services/PurchaseRequisitionsService";
 import { ListItem, Icon, SearchBar } from "react-native-elements";
 import { Button } from "native-base";
 import Accordion from "react-native-collapsible/Accordion";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { global } from "core-js";
+import { ConnectableObservable } from "rx";
 
-const CONTENT = [
-  {
-    PRNo: "OTT/150005",
-    PRDate: "31/12/2018",
-    Status: "Completed",
-    lines: [
-      {
-        lineItemNo: 1,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-001",
-        LineStatus: "Approved"
-      },
-      {
-        lineItemNo: 2,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-001",
-        LineStatus: "Approved"
-      }
-    ]
-  },
-  {
-    PRNo: "OTT-150006",
-    PRDate: "14/12/2018",
-    Status: "Completed",
-    lines: [
-      {
-        lineItemNo: 1,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-002",
-        LineStatus: "Approved"
-      },
-      {
-        lineItemNo: 2,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-002",
-        LineStatus: "Rejected"
-      },
-      {
-        lineItemNo: 3,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-002",
-        LineStatus: "Rejected"
-      },
-      {
-        lineItemNo: 4,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-002",
-        LineStatus: "Approved"
-      }
-    ]
-  },
-  {
-    PRNo: "OTT-150007",
-    PRDate: "25/10/2018",
-    Status: "Completed",
-    lines: [
-      {
-        lineItemNo: 1,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-003",
-        LineStatus: "Approved"
-      },
-      {
-        lineItemNo: 2,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-003",
-        LineStatus: "Approved"
-      },
-      {
-        lineItemNo: 3,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-003",
-        LineStatus: "Approved"
-      }
-    ]
-  },
-  {
-    PRNo: "OTT-150008",
-    PRDate: "31/11/2018",
-    Status: "Completed",
-    lines: [
-      {
-        lineItemNo: 1,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-004",
-        LineStatus: "Rejected"
-      },
-      {
-        lineItemNo: 2,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-004",
-        LineStatus: "Approved"
-      }
-    ]
-  },
-  {
-    PRNo: "OTT-150009",
-    PRDate: "31/10/2018",
-    Status: "Completed",
-    lines: [
-      {
-        lineItemNo: 1,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-005",
-        LineStatus: "Approved"
-      },
-      {
-        lineItemNo: 2,
-        StockCode: "UPKEEP-COMP",
-        StockDesc: "Upkeep company",
-        Vendor: "V-005",
-        LineStatus: "Approved"
-      }
-    ]
-  }
-];
-
+var skip = 0;
 export default class PendingApprovals extends Component {
   constructor(props) {
     super(props);
@@ -152,8 +31,18 @@ export default class PendingApprovals extends Component {
       allFilterPressed: false,
       pendingFilterPressed: false,
       approvedFilterPressed: false,
-      rejectedFilterPressed: false
+      rejectedFilterPressed: false,
+      content: [],
+      filteredContent: [],
+      loading: true,
+      loadMoreBusy: false,
+      showLoadMore: false,
+      originalShowLoadMore: false
     };
+  }
+
+  componentDidMount() {
+    this.loadAllApprovals();
   }
 
   static navigationOptions = {
@@ -169,6 +58,7 @@ export default class PendingApprovals extends Component {
 
   togglePressStatus = buttonType => {
     if (buttonType === "All") {
+      this.searchByStatus("");
       this.setState(
         { allFilterPressed: !this.state.allFilterPressed },
         function() {
@@ -187,47 +77,93 @@ export default class PendingApprovals extends Component {
         { pendingFilterPressed: !this.state.pendingFilterPressed },
         function() {
           if (this.state.pendingFilterPressed) {
+            this.searchByStatus("P");
             this.setState({
               allFilterPressed: false,
               approvedFilterPressed: false,
               rejectedFilterPressed: false
             });
+          } else {
+            this.searchByStatus("");
           }
         }
       );
     }
     if (buttonType === "Approved") {
       this.setState(
-        {
-          approvedFilterPressed: !this.state.approvedFilterPressed
-        },
+        { approvedFilterPressed: !this.state.approvedFilterPressed },
         function() {
           if (this.state.approvedFilterPressed) {
+            this.searchByStatus("A");
             this.setState({
               allFilterPressed: false,
               pendingFilterPressed: false,
               rejectedFilterPressed: false
             });
+          } else {
+            this.searchByStatus("");
           }
         }
       );
     }
     if (buttonType === "Rejected") {
       this.setState(
-        {
-          rejectedFilterPressed: !this.state.rejectedFilterPressed
-        },
+        { rejectedFilterPressed: !this.state.rejectedFilterPressed },
         function() {
           if (this.state.rejectedFilterPressed) {
+            this.searchByStatus("X");
             this.setState({
               allFilterPressed: false,
               pendingFilterPressed: false,
               approvedFilterPressed: false
             });
+          } else {
+            this.searchByStatus("");
           }
         }
       );
     }
+  };
+
+  loadAllApprovals = () => {
+    this.setState({ loadMoreBusy: true });
+    getPRInfoPaging(skip, global.prTakeValue).then(res => {
+      const jsonArray = JSON.parse(res.data);
+      //const jsonArray = res.data;
+
+      if (jsonArray.length == global.prTakeValue) {
+        skip += global.prTakeValue;
+        var showLoadMore = true;
+      } else {
+        var showLoadMore = false;
+      }
+      // originalShowLoadMore is used to keep the original status of the showLoadMore variable
+      // since it will changed when searching
+      this.setState({
+        showLoadMore: showLoadMore,
+        originalShowLoadMore: showLoadMore
+      });
+
+      var currentContent = this.state.content;
+      var content = currentContent.concat(jsonArray);
+
+      this.setState({
+        content: content,
+        filteredContent: content,
+        loading: false,
+        loadMoreBusy: false
+      });
+    });
+  };
+
+  onPressHeader = PRHeaderId => {
+    this.props.navigation.navigate("PurchaseRequisitionHeader", { PRHeaderId });
+  };
+
+  onPressLine = PRLineId => {
+    this.props.navigation.navigate("PurchaseRequisitionLine", {
+      PRLineId
+    });
   };
 
   setSections = sections => {
@@ -236,34 +172,76 @@ export default class PendingApprovals extends Component {
     });
   };
 
+  searchAllApprovals = value => {
+    console.log("originalShowLoadMore : " + this.state.originalShowLoadMore);
+    if (this.state.originalShowLoadMore) {
+      value == ""
+        ? this.setState({ showLoadMore: true })
+        : this.setState({ showLoadMore: false });
+    }
+
+    // get content (where all the data is) and filter it
+    //const filterData = this.state.content.filter(field => (field.PRNo.toLowerCase().startsWith(value.toLowerCase()) || field.PRDate.toLowerCase().startsWith(value.toLowerCase())));
+    const filterData = this.state.content.filter(
+      field =>
+        field.PRNumber.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
+        field.PR_Date.toLowerCase().indexOf(value.toLowerCase()) !== -1
+    );
+    // add the filteredContent to the respective state variable
+    const filteredContent = filterData;
+    this.setState({ filteredContent });
+  };
+
+  searchByStatus = value => {
+    if (this.state.originalShowLoadMore) {
+      value == ""
+        ? this.setState({ showLoadMore: true })
+        : this.setState({ showLoadMore: false });
+    }
+
+    const filterData = this.state.content.filter(field =>
+      field.Status != null
+        ? field.Status.toLowerCase().indexOf(value.toLowerCase()) !== -1
+        : true
+    );
+    // add the filteredContent to the respective state variable
+    const filteredContent = filterData;
+    this.setState({ filteredContent });
+  };
+
   renderHeader = (section, _, isActive) => {
     return (
       <ListItem
-        title={`PR No: ${section.PRNo}`}
+        title={`PR No: ${section.PRNumber}`}
         titleStyle={styles.listHeaderText}
-        subtitle={`PR Date: ${section.PRDate} \n Status: ${section.Status}`}
+        subtitle={`PR Date: ${section.PR_Date} \n Status: ${section.Status}`}
         subtitleStyle={styles.lineItemSubtitle}
-        key={section.PRNo}
+        key={section.PRNumber}
         badge={{
-          value: section.lines.length,
+          value: section.PRDetailMasters.length,
           textStyle: { color: global.foregroundColor },
           containerStyle: { backgroundColor: global.accentColor }
         }}
         leftIcon={
-          <Icon name="cart" type="evilicon" color={global.foregroundColor} />
+          <Icon
+            name="cart"
+            type="evilicon"
+            color={global.foregroundColor}
+            onPress={() => this.onPressHeader(section.ID)}
+          />
         }
       />
     );
   };
 
   renderContent = (section, _, isActive) => {
-    return section.lines.map(lineItem => (
+    return section.PRDetailMasters.map(lineItem => (
       <ListItem
         containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
-        title={lineItem.lineItemNo + " : " + lineItem.StockCode}
+        title={lineItem.PRLine + " : " + lineItem.StockDesc}
         titleStyle={styles.lineItemTitle}
-        key={lineItem.lineItemNo}
-        subtitle={`Vendor: ${lineItem.Vendor}`}
+        key={lineItem.PRLine}
+        subtitle={`Vendor: ${lineItem.VendorID}`}
         subtitleStyle={styles.lineItemSubtitle}
         badge={{
           value: lineItem.LineStatus,
@@ -282,6 +260,7 @@ export default class PendingApprovals extends Component {
             style={{
               paddingLeft: 20
             }}
+            onPress={() => this.onPressLine(lineItem.ID)}
           />
         }
         hideChevron
@@ -290,7 +269,36 @@ export default class PendingApprovals extends Component {
   };
 
   render() {
-    const { multipleSelect, activeSections, checked } = this.state;
+    const {
+      multipleSelect,
+      activeSections,
+      filteredContent,
+      checked
+    } = this.state;
+    // If the data is still loading, return the activity indicator view with heading
+    if (this.state.loading) {
+      return (
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
+              All Purchase
+            </Text>
+            <Text style={{ fontSize: 30, fontWeight: "100" }}>
+              &nbsp;Requisitions
+            </Text>
+          </View>
+          <View style={styles.activityIndicatorContainer}>
+            <ActivityIndicator
+              animating={this.state.loading}
+              hidesWhenStopped={true}
+              color={global.accentColor}
+              size="large"
+              style={styles.activityIndicator}
+            />
+          </View>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
@@ -308,6 +316,7 @@ export default class PendingApprovals extends Component {
             placeholder="Search PRs..."
             containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
             inputStyle={{ backgroundColor: global.backgroundColor }}
+            onChangeText={text => this.searchAllApprovals(text)}
             round
             clearIcon
           />
@@ -425,13 +434,41 @@ export default class PendingApprovals extends Component {
               <ScrollView style={styles.accordianContainer}>
                 <Accordion
                   activeSections={activeSections}
-                  sections={CONTENT}
+                  sections={filteredContent}
                   expandMultiple={multipleSelect}
                   renderHeader={this.renderHeader}
                   renderContent={this.renderContent}
                   duration={400}
                   onChange={this.setSections}
                 />
+                {this.state.showLoadMore ? (
+                  <View
+                    style={{ alignItems: "center", justifyContent: "center" }}
+                  >
+                    {this.state.loadMoreBusy ? (
+                      <ActivityIndicator
+                        animating={this.state.loadMoreBusy}
+                        hidesWhenStopped={true}
+                        color={global.accentColor}
+                        size="large"
+                        style={styles.activityIndicator}
+                      />
+                    ) : (
+                      <TouchableOpacity onPress={() => this.loadAllApprovals()}>
+                        <Text
+                          style={{
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginTop: 10,
+                            marginBottom: 10
+                          }}
+                        >
+                          Load More...
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                ) : null}
               </ScrollView>
             </View>
           </Row>
@@ -455,6 +492,16 @@ const styles = StyleSheet.flatten({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     alignContent: "flex-start"
+  },
+  activityIndicatorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center"
+  },
+  activityIndicator: {
+    justifyContent: "center",
+    alignItems: "center"
   },
   searchBarContainer: {
     marginBottom: 10,

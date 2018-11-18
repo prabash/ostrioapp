@@ -51,7 +51,8 @@ export default class PendingApprovals extends Component {
       filteredContent: [],
       loading: true,
       loadMoreBusy: false,
-      showLoadMore: false
+      showLoadMore: false,
+      originalShowLoadMore: false
     };
   }
 
@@ -70,7 +71,6 @@ export default class PendingApprovals extends Component {
       } else {
         var showLoadMore = false;
       }
-      console.log("+++++++++++ skip " + skip);
       this.setState({ showLoadMore });
 
       console.log(jsonArray);
@@ -191,9 +191,11 @@ export default class PendingApprovals extends Component {
   };
 
   searchPendingApprovals = value => {
-    value == ""
-      ? this.setState({ showLoadMore: true })
-      : this.setState({ showLoadMore: false });
+    if (this.state.originalShowLoadMore) {
+      value == ""
+        ? this.setState({ showLoadMore: true })
+        : this.setState({ showLoadMore: false });
+    }
 
     // get content (where all the data is) and filter it
     //const filterData = this.state.content.filter(field => (field.PRNo.toLowerCase().startsWith(value.toLowerCase()) || field.PRDate.toLowerCase().startsWith(value.toLowerCase())));
