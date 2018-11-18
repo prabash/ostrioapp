@@ -11,7 +11,7 @@ import {
 import { Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { onSignOut, getSessionKey } from "../../Global/Auth";
-import { getUserInfo } from "../../services/LoginService";
+import { getUserInfo, getSessionKeyDetails } from "../../services/LoginService";
 
 const data = [
   {
@@ -75,19 +75,49 @@ const numColumns = 3;
 export default class HomePage extends Component {
   constructor(props) {
     super(props);
-    this.state = { viewRef: null };
+    this.state = {
+      viewRef: null,
+      username: "User",
+      role: null
+    };
   }
 
   componentDidMount() {
-    getSessionKey().then(res => {
-      console.log("ASYNC STORAGE KEY : " + res);
-      if (res !== null) {
-        getUserInfo(res).then(userInfo => {
-          console.log("USER INFO :" + userInfo.data.firstName);
+    getSessionKey().then(sessionKey => {
+      console.log("ASYNC STORAGE KEY : " + sessionKey);
+      if (sessionKey !== null) {
+        console.log(getSessionKeyDetails(sessionKey));
+        var keyDetails = getSessionKeyDetails(sessionKey);
+        console.log("KEY DETAILS : " + keyDetails);
+        var permissionDetails = JSON.parse(keyDetails.permission);
+        console.log("USERID : " + permissionDetails.userId);
+
+        getUserInfo(sessionKey, permissionDetails.userId).then(userInfo => {
+          this.setState({ role : this.capitalizeFirstLetter(keyDetails.role)})
+          if (
+            typeof userInfo.data.firstName != "undefined" &&
+            userInfo.data.firstName !== null
+          ) {
+            console.log("FIRST NAME : " + userInfo.data.firstName);
+            this.setState({
+              username:
+                this.capitalizeFirstLetter(userInfo.data.firstName) +
+                this.capitalizeFirstLetter(userInfo.data.lastName)
+            });
+          } else {
+            console.log("UNIQUE NAME : " + keyDetails.unique_name);
+            this.setState({
+              username: this.capitalizeFirstLetter(keyDetails.unique_name)
+            });
+          }
         });
       }
     });
   }
+
+  capitalizeFirstLetter = string => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
 
   imageLoaded() {
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) });
@@ -178,6 +208,7 @@ export default class HomePage extends Component {
   };
 
   render() {
+    const { username, role } = this.state;
     return (
       <View style={styles.container}>
         <Grid>
@@ -195,7 +226,7 @@ export default class HomePage extends Component {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 40, fontWeight: "100", paddingLeft: 30 }}
+                    style={{ fontSize: 36, fontWeight: "100", paddingLeft: 30 }}
                   >
                     Hello
                   </Text>
@@ -212,12 +243,11 @@ export default class HomePage extends Component {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, fontWeight: "500", paddingLeft: 30 }}
+                    style={{ fontSize: 34, fontWeight: "500", paddingLeft: 30 }}
                   >
-                    John Doe
+                    {username}!
                   </Text>
                 </Col>
-                <Col size={2} />
               </Row>
               <Row size={1.5}>
                 <Col
@@ -236,10 +266,7 @@ export default class HomePage extends Component {
                           paddingLeft: 30
                         }}
                       >
-                        Product&nbsp;
-                      </Text>
-                      <Text style={{ fontSize: 14, fontWeight: "100" }}>
-                        Designer
+                        {role}
                       </Text>
                     </Row>
                   </Grid>

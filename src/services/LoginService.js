@@ -1,4 +1,5 @@
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const mainURL = `http://dmsuat.eastus.cloudapp.azure.com/`;
 
@@ -19,11 +20,16 @@ export const login = (_username, _password) => {
   );
 };
 
-export const getUserInfo = sessionKey => {
-  const loginURL = `/filemanagement/user_management/profile/getProfile?userId=11`;
+export const getUserInfo = (_sessionKey, _userId) => {
+  const loginURL = `/filemanagement/user_management/profile/getProfile?userId=${_userId}`;
   return axios.get(mainURL + loginURL, {
     headers: {
-      Authorization: "Bearer " + sessionKey
+      Authorization: "Bearer " + _sessionKey
     }
   });
+};
+
+export const getSessionKeyDetails = _sessionKey => {
+  var decoded = jwt_decode(_sessionKey);
+  return decoded;
 };
