@@ -81,6 +81,7 @@ local.properties
 *.iml
 /android/app/build
 /android/app/google-services.json
+/android/build
 
 # Ios
 
