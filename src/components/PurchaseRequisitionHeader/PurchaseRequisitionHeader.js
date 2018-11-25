@@ -10,7 +10,18 @@ import {
   FlatList,
   ActivityIndicator
 } from "react-native";
-import { Form, Item, Input, Textarea, Label } from "native-base";
+import {
+  Button,
+  Header,
+  Left,
+  Body,
+  Item,
+  Input,
+  Title,
+  Form,
+  Textarea,
+  Label
+} from "native-base";
 import { ListItem, Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { getPRHeaderById } from "../../services/PurchaseRequisitionsService";
@@ -106,13 +117,26 @@ export default class PurchaseRequisitionHeader extends Component {
     if (this.state.loading) {
       return (
         <View style={styles.container}>
+          <Header searchBar rounded>
+            <Left>
+              <Button transparent>
+                <Icon
+                  name="chevron-left"
+                  type="evilicon"
+                  size={40}
+                  onPress={() => this.props.navigation.goBack(null)}
+                />
+              </Button>
+            </Left>
+            <Body style={{ flex: 2 }}>
+              <Title>PR Header</Title>
+            </Body>
+          </Header>
           <View style={styles.headerContainer}>
             <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
               PR No:
             </Text>
-            <Text style={{ fontSize: 30, fontWeight: "100" }}>
-              &nbsp;..
-            </Text>
+            <Text style={{ fontSize: 30, fontWeight: "100" }}>&nbsp;..</Text>
           </View>
           <View style={styles.activityIndicatorContainer}>
             <ActivityIndicator
@@ -128,6 +152,21 @@ export default class PurchaseRequisitionHeader extends Component {
     }
     return (
       <View style={styles.container}>
+        <Header searchBar rounded>
+          <Left>
+            <Button transparent>
+              <Icon
+                name="chevron-left"
+                type="evilicon"
+                size={40}
+                onPress={() => this.props.navigation.goBack(null)}
+              />
+            </Button>
+          </Left>
+          <Body style={{ flex: 2 }}>
+            <Title>PR Header</Title>
+          </Body>
+        </Header>
         <Grid>
           <Row size={0.4}>
             <Grid style={{ flex: 1 }}>
@@ -159,7 +198,10 @@ export default class PurchaseRequisitionHeader extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>PR No</Label>
-                        <Input disabled value={this.state.headerData.PRNumber} />
+                        <Input
+                          disabled
+                          value={this.state.headerData.PRNumber}
+                        />
                       </Item>
                     </Col>
                     <Col>
@@ -173,13 +215,19 @@ export default class PurchaseRequisitionHeader extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>Branch ID</Label>
-                        <Input disabled value={this.state.headerData.BranchID} />
+                        <Input
+                          disabled
+                          value={this.state.headerData.BranchID}
+                        />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
                         <Label>Route Dept.</Label>
-                        <Input disabled value={this.state.headerData.Department} />
+                        <Input
+                          disabled
+                          value={this.state.headerData.Department}
+                        />
                       </Item>
                     </Col>
                   </Row>
@@ -187,7 +235,10 @@ export default class PurchaseRequisitionHeader extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>Priority</Label>
-                        <Input disabled value={this.state.headerData.Priority} />
+                        <Input
+                          disabled
+                          value={this.state.headerData.Priority}
+                        />
                       </Item>
                     </Col>
                     <Col>
@@ -201,7 +252,10 @@ export default class PurchaseRequisitionHeader extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>Requester</Label>
-                        <Input disabled value={this.state.headerData.Requester} />
+                        <Input
+                          disabled
+                          value={this.state.headerData.Requester}
+                        />
                       </Item>
                     </Col>
                     <Col>
@@ -215,7 +269,13 @@ export default class PurchaseRequisitionHeader extends Component {
                     <Label>Address</Label>
                     <Textarea
                       disabled
-                      value={this.state.headerData.ShipAdd1 + "\n"+this.state.headerData.ShipAdd2 + "\n"+this.state.headerData.ShipAdd3 }
+                      value={
+                        this.state.headerData.ShipAdd1 +
+                        "\n" +
+                        this.state.headerData.ShipAdd2 +
+                        "\n" +
+                        this.state.headerData.ShipAdd3
+                      }
                       rowSpan={3}
                       style={{ alignSelf: "flex-start" }}
                     />
@@ -233,7 +293,7 @@ export default class PurchaseRequisitionHeader extends Component {
                     <Label>Comments</Label>
                     <Textarea
                       disabled
-                      value={this.state.headerData.Memo }
+                      value={this.state.headerData.Memo}
                       rowSpan={3}
                       style={{ alignSelf: "flex-start" }}
                     />

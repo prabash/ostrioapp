@@ -46,28 +46,28 @@ export const SignedIn = createStackNavigator(
       screen : PendingApprovals,
       navigationOptions: {
         tabBarLabel: "Pending Approvals",
-        header: null
+        header: null,
       }
     },
     AllApprovals : {
       screen : AllApprovals,
       navigationOptions: {
         tabBarLabel: "All Approvals",
-        header: null
+        header: null,
       }
     },
     PurchaseRequisitionHeader: {
       screen: PurchaseRequisitionHeader,
       navigationOptions: {
         tabBarLabel: "Purchase Req. Header",
-        header: null
+        header: null,
       }
     },
     PurchaseRequisitionLine: {
       screen: PurchaseRequisitionLine,
       navigationOptions: {
         tabBarLabel: "Purchase Req. Line",
-        header: null
+        header: null,
       }
     },
   },

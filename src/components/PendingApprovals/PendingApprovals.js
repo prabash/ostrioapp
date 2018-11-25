@@ -8,7 +8,16 @@ import {
   ActivityIndicator,
   TouchableOpacity
 } from "react-native";
-import { Button, Header, Left, Body, Right, Item, Input } from "native-base";
+import {
+  Button,
+  Header,
+  Left,
+  Body,
+  Right,
+  Item,
+  Input,
+  Title
+} from "native-base";
 import { ListItem, Icon, SearchBar } from "react-native-elements";
 import Accordion from "react-native-collapsible/Accordion";
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -16,7 +25,6 @@ import {
   getAllPRInfo,
   getPRInfoPaging
 } from "../../services/PurchaseRequisitionsService";
-import axios from "axios";
 
 function getJsonData() {
   return fetch(
@@ -52,7 +60,8 @@ export default class PendingApprovals extends Component {
       loading: true,
       loadMoreBusy: false,
       showLoadMore: false,
-      originalShowLoadMore: false
+      originalShowLoadMore: false,
+      showSearchBar: false
     };
   }
 
@@ -71,7 +80,12 @@ export default class PendingApprovals extends Component {
       } else {
         var showLoadMore = false;
       }
-      this.setState({ showLoadMore });
+      // originalShowLoadMore is used to keep the original status of the showLoadMore variable
+      // since it will changed when searching
+      this.setState({
+        showLoadMore: showLoadMore,
+        originalShowLoadMore: showLoadMore
+      });
 
       console.log(jsonArray);
       for (var i = 0; i < jsonArray.length; i++) {
@@ -190,11 +204,21 @@ export default class PendingApprovals extends Component {
     });
   };
 
+  toggleSearchBar = () => {
+    this.searchPendingApprovals("");
+    this.setState({
+      showSearchBar: !this.state.showSearchBar
+    });
+  };
+
   searchPendingApprovals = value => {
+    this.setState();
     if (this.state.originalShowLoadMore) {
-      value == ""
-        ? this.setState({ showLoadMore: true })
-        : this.setState({ showLoadMore: false });
+      if (value == "") {
+        this.setState({ showLoadMore: true });
+      } else {
+        this.setState({ showLoadMore: false });
+      }
     }
 
     // get content (where all the data is) and filter it
@@ -291,12 +315,39 @@ export default class PendingApprovals extends Component {
       multipleSelect,
       activeSections,
       filteredContent,
+      showSearchBar,
       checked
     } = this.state;
     // If the data is still loading, return the activity indicator view with heading
     if (this.state.loading) {
       return (
         <View style={styles.container}>
+          <Header searchBar rounded>
+            <Left>
+              <Button transparent>
+                <Icon
+                  name="chevron-left"
+                  type="evilicon"
+                  size={40}
+                  onPress={() =>
+                    this.props.navigation.goBack(null)
+                  }
+                />
+              </Button>
+            </Left>
+            <Body>
+              <Title>Pending Approvals</Title>
+            </Body>
+            <Right>
+              <Button transparent>
+                <Icon
+                  name="search"
+                  type="evilicon"
+                  onPress={() => this.toggleSearchBar()}
+                />
+              </Button>
+            </Right>
+          </Header>
           <View style={styles.headerContainer}>
             <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
               Pending
@@ -320,6 +371,52 @@ export default class PendingApprovals extends Component {
     // else rreturn the loaded view
     return (
       <View style={styles.container}>
+        {!showSearchBar ? (
+          <Header searchBar rounded>
+            <Left>
+              <Button transparent>
+                <Icon
+                  name="chevron-left"
+                  type="evilicon"
+                  size={40}
+                  onPress={() =>
+                    this.props.navigation.goBack(null)
+                  }
+                />
+              </Button>
+            </Left>
+            <Body>
+              <Title>Pending Approvals</Title>
+            </Body>
+            <Right>
+              <Button transparent>
+                <Icon
+                  name="search"
+                  type="evilicon"
+                  onPress={() => this.toggleSearchBar()}
+                />
+              </Button>
+            </Right>
+          </Header>
+        ) : (
+          <Header searchBar rounded>
+            <Item>
+              <Icon name="search" type="evilicon" />
+              <Input
+                placeholder="Search Pending Approvals"
+                onChangeText={text => this.searchPendingApprovals(text)}
+              />
+              <Icon
+                name="close"
+                type="evilicon"
+                onPress={() => this.toggleSearchBar()}
+              />
+            </Item>
+            <Button transparent>
+              <Text>Search</Text>
+            </Button>
+          </Header>
+        )}
         <View style={styles.headerContainer}>
           <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
             Pending
@@ -327,18 +424,6 @@ export default class PendingApprovals extends Component {
           <Text style={{ fontSize: 30, fontWeight: "100" }}>
             &nbsp;Approvals
           </Text>
-        </View>
-        <View style={styles.searchBarContainer}>
-          <SearchBar
-            lightTheme
-            icon={{ type: "evilicons", name: "search" }}
-            placeholder="Search PRs..."
-            containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
-            inputStyle={{ backgroundColor: global.backgroundColor }}
-            onChangeText={text => this.searchPendingApprovals(text)}
-            round
-            clearIcon
-          />
         </View>
         <Grid style={styles.bodyContainer}>
           <Row size={3}>

@@ -8,7 +8,18 @@ import {
   Image,
   ActivityIndicator
 } from "react-native";
-import { Form, Item, Input, Textarea, Label } from "native-base";
+import {
+  Button,
+  Header,
+  Left,
+  Body,
+  Item,
+  Input,
+  Title,
+  Form,
+  Textarea,
+  Label
+} from "native-base";
 import { ListItem, Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { getPRLineById } from "../../services/PurchaseRequisitionsService";
@@ -60,6 +71,21 @@ export default class PurchaseRequisitionLine extends Component {
     if (this.state.loading) {
       return (
         <View style={styles.container}>
+          <Header searchBar rounded>
+            <Left>
+              <Button transparent>
+                <Icon
+                  name="chevron-left"
+                  type="evilicon"
+                  size={40}
+                  onPress={() => this.props.navigation.goBack(null)}
+                />
+              </Button>
+            </Left>
+            <Body style={{ flex: 2 }}>
+              <Title>PR Line</Title>
+            </Body>
+          </Header>
           <View style={styles.headerContainer}>
             <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
               PR No:
@@ -82,6 +108,21 @@ export default class PurchaseRequisitionLine extends Component {
     }
     return (
       <View style={styles.container}>
+        <Header searchBar rounded>
+          <Left>
+            <Button transparent>
+              <Icon
+                name="chevron-left"
+                type="evilicon"
+                size={40}
+                onPress={() => this.props.navigation.goBack(null)}
+              />
+            </Button>
+          </Left>
+          <Body style={{ flex: 2 }}>
+            <Title>PR Line</Title>
+          </Body>
+        </Header>
         <Grid>
           <Row size={0.4}>
             <Grid style={{ flex: 1 }}>
@@ -119,7 +160,10 @@ export default class PurchaseRequisitionLine extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>Line No</Label>
-                        <Input disabled value={this.state.lineData.PRLine.toString()} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.PRLine.toString()}
+                        />
                       </Item>
                     </Col>
                   </Row>
@@ -127,7 +171,10 @@ export default class PurchaseRequisitionLine extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>Vendor Type</Label>
-                        <Input disabled value={this.state.lineData.VendorType} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.VendorType}
+                        />
                       </Item>
                     </Col>
                     <Col>
@@ -157,13 +204,19 @@ export default class PurchaseRequisitionLine extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>Currency Code</Label>
-                        <Input disabled value={this.state.lineData.CurrencyCode} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.CurrencyCode}
+                        />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
                         <Label>Currency Rate</Label>
-                        <Input disabled value={this.state.lineData.CurrencyRate.toString()} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.CurrencyRate.toString()}
+                        />
                       </Item>
                     </Col>
                   </Row>
@@ -177,7 +230,10 @@ export default class PurchaseRequisitionLine extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>SST Percent (%)</Label>
-                        <Input disabled value={this.state.lineData.VATPercentage.toString()} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.VATPercentage.toString()}
+                        />
                       </Item>
                     </Col>
                   </Row>
@@ -185,7 +241,10 @@ export default class PurchaseRequisitionLine extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>Terms</Label>
-                        <Input disabled value={this.state.lineData.PayTerms.toString()} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.PayTerms.toString()}
+                        />
                       </Item>
                     </Col>
                     <Col>
@@ -227,13 +286,19 @@ export default class PurchaseRequisitionLine extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>Quantity</Label>
-                        <Input disabled value={this.state.lineData.Quantity.toString()} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.Quantity.toString()}
+                        />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
                         <Label>Unit Price</Label>
-                        <Input disabled value={this.state.lineData.UnitPrice.toString()} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.UnitPrice.toString()}
+                        />
                       </Item>
                     </Col>
                   </Row>
@@ -241,13 +306,19 @@ export default class PurchaseRequisitionLine extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>Discount (%)</Label>
-                        <Input disabled value={this.state.lineData.Discount.toString()} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.Discount.toString()}
+                        />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
                         <Label>Discount Amount</Label>
-                        <Input disabled value={this.state.lineData.DiscAmount.toString()} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.DiscAmount.toString()}
+                        />
                       </Item>
                     </Col>
                   </Row>
@@ -255,13 +326,19 @@ export default class PurchaseRequisitionLine extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>Extended Price</Label>
-                        <Input disabled value={this.state.lineData.TotalPrice.toString()} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.TotalPrice.toString()}
+                        />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
                         <Label>Local Amount</Label>
-                        <Input disabled value={this.state.lineData.LocalUnitPrice.toString()} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.LocalUnitPrice.toString()}
+                        />
                       </Item>
                     </Col>
                   </Row>
@@ -269,7 +346,10 @@ export default class PurchaseRequisitionLine extends Component {
                     <Col>
                       <Item stackedLabel>
                         <Label>Approval Status</Label>
-                        <Input disabled value={this.state.lineData.Status.toString()} />
+                        <Input
+                          disabled
+                          value={this.state.lineData.Status.toString()}
+                        />
                       </Item>
                     </Col>
                   </Row>
