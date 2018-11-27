@@ -274,6 +274,7 @@ export default class PendingApprovals extends Component {
         onSwitch={value =>
           this.checkOnPRHeaderValueChange(value, section.PRNumber)
         }
+        //switchThumbTintColor={global.themeColor}
         hideChevron
       />
     );
@@ -305,6 +306,7 @@ export default class PendingApprovals extends Component {
             lineItem.PRLine
           )
         }
+        //switchThumbTintColor={global.themeColor}
         hideChevron
       />
     ));
@@ -322,37 +324,48 @@ export default class PendingApprovals extends Component {
     if (this.state.loading) {
       return (
         <View style={styles.container}>
-          <Header searchBar rounded>
+          <Header
+            searchBar
+            rounded
+            style={{ backgroundColor: global.themeColor }}
+            androidStatusBarColor={global.themeColor}
+          >
             <Left>
               <Button transparent>
                 <Icon
                   name="chevron-left"
                   type="evilicon"
                   size={40}
-                  onPress={() =>
-                    this.props.navigation.goBack(null)
-                  }
+                  onPress={() => this.props.navigation.goBack(null)}
+                  color={global.headerForegroundColor}
                 />
               </Button>
             </Left>
             <Body>
-              <Title>Pending Approvals</Title>
+              <Title style={{ color: global.headerForegroundColor }}>
+                Pending Approvals
+              </Title>
             </Body>
-            <Right>
-              <Button transparent>
-                <Icon
-                  name="search"
-                  type="evilicon"
-                  onPress={() => this.toggleSearchBar()}
-                />
-              </Button>
-            </Right>
+            <Right />
           </Header>
           <View style={styles.headerContainer}>
-            <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: "500",
+                paddingLeft: 20,
+                color: global.foregroundColor
+              }}
+            >
               Pending
             </Text>
-            <Text style={{ fontSize: 30, fontWeight: "100" }}>
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: "100",
+                color: global.foregroundColor
+              }}
+            >
               &nbsp;Approvals
             </Text>
           </View>
@@ -372,21 +385,25 @@ export default class PendingApprovals extends Component {
     return (
       <View style={styles.container}>
         {!showSearchBar ? (
-          <Header searchBar rounded>
+          <Header
+            searchBar
+            rounded
+            style={{ backgroundColor: global.themeColor }}
+            androidStatusBarColor={global.themeColor}
+          >
             <Left>
               <Button transparent>
                 <Icon
                   name="chevron-left"
                   type="evilicon"
                   size={40}
-                  onPress={() =>
-                    this.props.navigation.goBack(null)
-                  }
+                  onPress={() => this.props.navigation.goBack(null)}
+                  color={global.headerForegroundColor}
                 />
               </Button>
             </Left>
             <Body>
-              <Title>Pending Approvals</Title>
+              <Title style={{ color: global.headerForegroundColor }}>Pending Approvals</Title>
             </Body>
             <Right>
               <Button transparent>
@@ -394,12 +411,18 @@ export default class PendingApprovals extends Component {
                   name="search"
                   type="evilicon"
                   onPress={() => this.toggleSearchBar()}
+                  color={global.headerForegroundColor}
                 />
               </Button>
             </Right>
           </Header>
         ) : (
-          <Header searchBar rounded>
+          <Header
+            searchBar
+            rounded
+            style={{ backgroundColor: global.themeColor }}
+            androidStatusBarColor={global.themeColor}
+          >
             <Item>
               <Icon name="search" type="evilicon" />
               <Input
@@ -418,10 +441,23 @@ export default class PendingApprovals extends Component {
           </Header>
         )}
         <View style={styles.headerContainer}>
-          <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
+          <Text
+            style={{
+              fontSize: 30,
+              fontWeight: "500",
+              paddingLeft: 20,
+              color: global.foregroundColor
+            }}
+          >
             Pending
           </Text>
-          <Text style={{ fontSize: 30, fontWeight: "100" }}>
+          <Text
+            style={{
+              fontSize: 30,
+              fontWeight: "100",
+              color: global.foregroundColor
+            }}
+          >
             &nbsp;Approvals
           </Text>
         </View>
@@ -459,7 +495,8 @@ export default class PendingApprovals extends Component {
                             alignItems: "center",
                             justifyContent: "center",
                             marginTop: 10,
-                            marginBottom: 10
+                            marginBottom: 10,
+                            color: global.foregroundColor
                           }}
                         >
                           Load More...

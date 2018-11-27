@@ -62,7 +62,12 @@ export default class Login extends Component {
           <View style={styles.loginFormContainer}>
             <StatusBar barStyle="light-content" />
             <View style={styles.inputContainer}>
-              <Icon name="user" type="evilicon" style={styles.inputIcon} />
+              <Icon
+                name="user"
+                type="evilicon"
+                style={styles.inputIcon}
+                color={global.foregroundColor}
+              />
               <TextInput
                 style={styles.input}
                 placeholder="Username"
@@ -76,7 +81,12 @@ export default class Login extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Icon name="lock" type="evilicon" style={styles.inputIcon} />
+              <Icon
+                name="lock"
+                type="evilicon"
+                style={styles.inputIcon}
+                color={global.foregroundColor}
+              />
               <TextInput
                 style={styles.input}
                 placeholder="Password"
@@ -154,8 +164,7 @@ const styles = StyleSheet.create({
     height: 40
   },
   inputIcon: {
-    paddingLeft: 5,
-    color: global.foregroundColor
+    paddingLeft: 5
   },
   input: {
     flex: 1,

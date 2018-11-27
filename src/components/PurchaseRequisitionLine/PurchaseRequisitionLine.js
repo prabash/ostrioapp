@@ -71,7 +71,12 @@ export default class PurchaseRequisitionLine extends Component {
     if (this.state.loading) {
       return (
         <View style={styles.container}>
-          <Header searchBar rounded>
+          <Header
+            searchBar
+            rounded
+            style={{ backgroundColor: global.themeColor }}
+            androidStatusBarColor={global.themeColor}
+          >
             <Left>
               <Button transparent>
                 <Icon
@@ -79,18 +84,32 @@ export default class PurchaseRequisitionLine extends Component {
                   type="evilicon"
                   size={40}
                   onPress={() => this.props.navigation.goBack(null)}
+                  color={global.headerForegroundColor}
                 />
               </Button>
             </Left>
             <Body style={{ flex: 2 }}>
-              <Title>PR Line</Title>
+              <Title style={{ color: global.headerForegroundColor }}>PR Line</Title>
             </Body>
           </Header>
           <View style={styles.headerContainer}>
-            <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: "500",
+                paddingLeft: 20,
+                color: global.foregroundColor
+              }}
+            >
               PR No:
             </Text>
-            <Text style={{ fontSize: 30, fontWeight: "100" }}>
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: "100",
+                color: global.foregroundColor
+              }}
+            >
               &nbsp;Line No
             </Text>
           </View>
@@ -108,7 +127,12 @@ export default class PurchaseRequisitionLine extends Component {
     }
     return (
       <View style={styles.container}>
-        <Header searchBar rounded>
+        <Header
+          searchBar
+          rounded
+          style={{ backgroundColor: global.themeColor }}
+          androidStatusBarColor={global.themeColor}
+        >
           <Left>
             <Button transparent>
               <Icon
@@ -116,11 +140,12 @@ export default class PurchaseRequisitionLine extends Component {
                 type="evilicon"
                 size={40}
                 onPress={() => this.props.navigation.goBack(null)}
+                color={global.headerForegroundColor}
               />
             </Button>
           </Left>
           <Body style={{ flex: 2 }}>
-            <Title>PR Line</Title>
+            <Title style={{ color: global.headerForegroundColor }}>PR Line</Title>
           </Body>
         </Header>
         <Grid>
@@ -136,11 +161,22 @@ export default class PurchaseRequisitionLine extends Component {
                 }}
               >
                 <Text
-                  style={{ fontSize: 25, fontWeight: "500", paddingLeft: 20 }}
+                  style={{
+                    fontSize: 25,
+                    fontWeight: "500",
+                    paddingLeft: 20,
+                    color: global.foregroundColor
+                  }}
                 >
                   {this.state.lineData.PRNumber} -
                 </Text>
-                <Text style={{ fontSize: 25, fontWeight: "100" }}>
+                <Text
+                  style={{
+                    fontSize: 25,
+                    fontWeight: "100",
+                    color: global.foregroundColor
+                  }}
+                >
                   &nbsp;Line No: {this.state.lineData.PRLine}
                 </Text>
               </Row>
@@ -153,16 +189,21 @@ export default class PurchaseRequisitionLine extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>PR No</Label>
-                        <Input disabled value={this.state.lineData.PRNumber} />
+                        <Label style={styles.label}>PR No</Label>
+                        <Input
+                          disabled
+                          value={this.state.lineData.PRNumber}
+                          style={styles.content}
+                        />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Line No</Label>
+                        <Label style={styles.label}>Line No</Label>
                         <Input
                           disabled
                           value={this.state.lineData.PRLine.toString()}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
@@ -170,32 +211,40 @@ export default class PurchaseRequisitionLine extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Vendor Type</Label>
+                        <Label style={styles.label}>Vendor Type</Label>
                         <Input
                           disabled
                           value={this.state.lineData.VendorType}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Vendor ID</Label>
-                        <Input disabled value={this.state.lineData.VendorID} />
+                        <Label style={styles.label}>Vendor ID</Label>
+                        <Input
+                          disabled
+                          value={this.state.lineData.VendorID}
+                          style={styles.content}
+                        />
                       </Item>
                     </Col>
                   </Row>
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Vendor Name</Label>
+                        <Label style={styles.label}>Vendor Name</Label>
                         <Textarea
                           disabled
                           value={this.state.lineData.VendorName}
                           rowSpan={2}
-                          style={{
-                            alignSelf: "flex-start",
-                            justifyContent: "flex-end"
-                          }}
+                          style={[
+                            styles.content,
+                            {
+                              alignSelf: "flex-start",
+                              justifyContent: "flex-end"
+                            }
+                          ]}
                         />
                       </Item>
                     </Col>
@@ -203,19 +252,21 @@ export default class PurchaseRequisitionLine extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Currency Code</Label>
+                        <Label style={styles.label}>Currency Code</Label>
                         <Input
                           disabled
                           value={this.state.lineData.CurrencyCode}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Currency Rate</Label>
+                        <Label style={styles.label}>Currency Rate</Label>
                         <Input
                           disabled
                           value={this.state.lineData.CurrencyRate.toString()}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
@@ -223,16 +274,21 @@ export default class PurchaseRequisitionLine extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>SST Code</Label>
-                        <Input disabled value={this.state.lineData.VATCode} />
+                        <Label style={styles.label}>SST Code</Label>
+                        <Input
+                          disabled
+                          value={this.state.lineData.VATCode}
+                          style={styles.content}
+                        />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>SST Percent (%)</Label>
+                        <Label style={styles.label}>SST Percent (%)</Label>
                         <Input
                           disabled
                           value={this.state.lineData.VATPercentage.toString()}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
@@ -240,64 +296,87 @@ export default class PurchaseRequisitionLine extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Terms</Label>
+                        <Label style={styles.label}>Terms</Label>
                         <Input
                           disabled
                           value={this.state.lineData.PayTerms.toString()}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Tax Category</Label>
-                        <Input disabled value={this.state.lineData.TaxCode} />
+                        <Label style={styles.label}>Tax Category</Label>
+                        <Input
+                          disabled
+                          value={this.state.lineData.TaxCode}
+                          style={styles.content}
+                        />
                       </Item>
                     </Col>
                   </Row>
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Type</Label>
-                        <Input disabled value={this.state.lineData.PRType} />
+                        <Label style={styles.label}>Type</Label>
+                        <Input
+                          disabled
+                          value={this.state.lineData.PRType}
+                          style={styles.content}
+                        />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Stock Code</Label>
-                        <Input disabled value={this.state.lineData.StockCode} />
-                      </Item>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Item stackedLabel>
-                        <Label>UOM</Label>
-                        <Input disabled value={this.state.lineData.UMCode} />
-                      </Item>
-                    </Col>
-                    <Col>
-                      <Item stackedLabel>
-                        <Label>ETA Date</Label>
-                        <Input disabled value={this.state.lineData.ETADate} />
+                        <Label style={styles.label}>Stock Code</Label>
+                        <Input
+                          disabled
+                          value={this.state.lineData.StockCode}
+                          style={styles.content}
+                        />
                       </Item>
                     </Col>
                   </Row>
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Quantity</Label>
+                        <Label style={styles.label}>UOM</Label>
+                        <Input
+                          disabled
+                          value={this.state.lineData.UMCode}
+                          style={styles.content}
+                        />
+                      </Item>
+                    </Col>
+                    <Col>
+                      <Item stackedLabel>
+                        <Label style={styles.label}>ETA Date</Label>
+                        <Input
+                          disabled
+                          value={this.state.lineData.ETADate}
+                          style={styles.content}
+                        />
+                      </Item>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Item stackedLabel>
+                        <Label style={styles.label}>Quantity</Label>
                         <Input
                           disabled
                           value={this.state.lineData.Quantity.toString()}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Unit Price</Label>
+                        <Label style={styles.label}>Unit Price</Label>
                         <Input
                           disabled
                           value={this.state.lineData.UnitPrice.toString()}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
@@ -305,19 +384,21 @@ export default class PurchaseRequisitionLine extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Discount (%)</Label>
+                        <Label style={styles.label}>Discount (%)</Label>
                         <Input
                           disabled
                           value={this.state.lineData.Discount.toString()}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Discount Amount</Label>
+                        <Label style={styles.label}>Discount Amount</Label>
                         <Input
                           disabled
                           value={this.state.lineData.DiscAmount.toString()}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
@@ -325,19 +406,21 @@ export default class PurchaseRequisitionLine extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Extended Price</Label>
+                        <Label style={styles.label}>Extended Price</Label>
                         <Input
                           disabled
                           value={this.state.lineData.TotalPrice.toString()}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Local Amount</Label>
+                        <Label style={styles.label}>Local Amount</Label>
                         <Input
                           disabled
                           value={this.state.lineData.LocalUnitPrice.toString()}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
@@ -345,10 +428,11 @@ export default class PurchaseRequisitionLine extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Approval Status</Label>
+                        <Label style={styles.label}>Approval Status</Label>
                         <Input
                           disabled
                           value={this.state.lineData.Status.toString()}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
@@ -356,15 +440,18 @@ export default class PurchaseRequisitionLine extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Description</Label>
+                        <Label style={styles.label}>Description</Label>
                         <Textarea
                           disabled
                           value={this.state.lineData.StockDesc}
                           rowSpan={4}
-                          style={{
-                            alignSelf: "flex-start",
-                            justifyContent: "flex-end"
-                          }}
+                          style={[
+                            styles.content,
+                            {
+                              alignSelf: "flex-start",
+                              justifyContent: "flex-end"
+                            }
+                          ]}
                         />
                       </Item>
                     </Col>
@@ -372,15 +459,18 @@ export default class PurchaseRequisitionLine extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Remark/Justification</Label>
+                        <Label style={styles.label}>Remark/Justification</Label>
                         <Textarea
                           disabled
                           value={this.state.lineData.Remark}
                           rowSpan={4}
-                          style={{
-                            alignSelf: "flex-start",
-                            justifyContent: "flex-end"
-                          }}
+                          style={[
+                            styles.content,
+                            {
+                              alignSelf: "flex-start",
+                              justifyContent: "flex-end"
+                            }
+                          ]}
                         />
                       </Item>
                     </Col>
@@ -388,15 +478,18 @@ export default class PurchaseRequisitionLine extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Memo/Margin</Label>
+                        <Label style={styles.label}>Memo/Margin</Label>
                         <Textarea
                           disabled
                           value={this.state.lineData.Memo}
                           rowSpan={4}
-                          style={{
-                            alignSelf: "flex-start",
-                            justifyContent: "flex-end"
-                          }}
+                          style={[
+                            styles.content,
+                            {
+                              alignSelf: "flex-start",
+                              justifyContent: "flex-end"
+                            }
+                          ]}
                         />
                       </Item>
                     </Col>
@@ -435,6 +528,12 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     alignContent: "flex-start"
+  },
+  label: {
+    color: global.foregroundColor
+  },
+  content: {
+    color: global.foregroundColor
   },
   header: {
     flexDirection: "row"

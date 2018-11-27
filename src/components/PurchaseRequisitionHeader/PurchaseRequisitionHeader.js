@@ -117,7 +117,7 @@ export default class PurchaseRequisitionHeader extends Component {
     if (this.state.loading) {
       return (
         <View style={styles.container}>
-          <Header searchBar rounded>
+          <Header searchBar rounded style={{ backgroundColor : global.themeColor}} androidStatusBarColor={global.themeColor}>
             <Left>
               <Button transparent>
                 <Icon
@@ -125,18 +125,34 @@ export default class PurchaseRequisitionHeader extends Component {
                   type="evilicon"
                   size={40}
                   onPress={() => this.props.navigation.goBack(null)}
+                  color={global.headerForegroundColor}
                 />
               </Button>
             </Left>
             <Body style={{ flex: 2 }}>
-              <Title>PR Header</Title>
+              <Title style={{color: global.headerForegroundColor}}>PR Header</Title>
             </Body>
           </Header>
           <View style={styles.headerContainer}>
-            <Text style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}>
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: "500",
+                paddingLeft: 20,
+                color: global.foregroundColor
+              }}
+            >
               PR No:
             </Text>
-            <Text style={{ fontSize: 30, fontWeight: "100" }}>&nbsp;..</Text>
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: "100",
+                color: global.foregroundColor
+              }}
+            >
+              &nbsp;..
+            </Text>
           </View>
           <View style={styles.activityIndicatorContainer}>
             <ActivityIndicator
@@ -152,7 +168,7 @@ export default class PurchaseRequisitionHeader extends Component {
     }
     return (
       <View style={styles.container}>
-        <Header searchBar rounded>
+        <Header searchBar rounded style={{ backgroundColor : global.themeColor}} androidStatusBarColor={global.themeColor}>
           <Left>
             <Button transparent>
               <Icon
@@ -160,11 +176,12 @@ export default class PurchaseRequisitionHeader extends Component {
                 type="evilicon"
                 size={40}
                 onPress={() => this.props.navigation.goBack(null)}
+                color={global.headerForegroundColor}
               />
             </Button>
           </Left>
           <Body style={{ flex: 2 }}>
-            <Title>PR Header</Title>
+            <Title style={{color: global.headerForegroundColor}}>PR Header</Title>
           </Body>
         </Header>
         <Grid>
@@ -180,11 +197,22 @@ export default class PurchaseRequisitionHeader extends Component {
                 }}
               >
                 <Text
-                  style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}
+                  style={{
+                    fontSize: 30,
+                    fontWeight: "500",
+                    paddingLeft: 20,
+                    color: global.foregroundColor
+                  }}
                 >
                   PR No:
                 </Text>
-                <Text style={{ fontSize: 30, fontWeight: "100" }}>
+                <Text
+                  style={{
+                    fontSize: 30,
+                    fontWeight: "100",
+                    color: global.foregroundColor
+                  }}
+                >
                   &nbsp;{this.state.headerData.PRNumber}
                 </Text>
               </Row>
@@ -197,36 +225,43 @@ export default class PurchaseRequisitionHeader extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>PR No</Label>
+                        <Label style={styles.label}>PR No</Label>
                         <Input
                           disabled
                           value={this.state.headerData.PRNumber}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>PR Date</Label>
-                        <Input disabled value={this.state.headerData.PR_Date} />
+                        <Label style={styles.label}>PR Date</Label>
+                        <Input
+                          disabled
+                          value={this.state.headerData.PR_Date}
+                          style={styles.content}
+                        />
                       </Item>
                     </Col>
                   </Row>
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Branch ID</Label>
+                        <Label style={styles.label}>Branch ID</Label>
                         <Input
                           disabled
                           value={this.state.headerData.BranchID}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Route Dept.</Label>
+                        <Label style={styles.label}>Route Dept.</Label>
                         <Input
                           disabled
                           value={this.state.headerData.Department}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
@@ -234,39 +269,49 @@ export default class PurchaseRequisitionHeader extends Component {
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Priority</Label>
+                        <Label style={styles.label}>Priority</Label>
                         <Input
                           disabled
                           value={this.state.headerData.Priority}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Status</Label>
-                        <Input disabled value={this.state.headerData.Status} />
+                        <Label style={styles.label}>Status</Label>
+                        <Input
+                          disabled
+                          value={this.state.headerData.Status}
+                          style={styles.content}
+                        />
                       </Item>
                     </Col>
                   </Row>
                   <Row>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Requester</Label>
+                        <Label style={styles.label}>Requester</Label>
                         <Input
                           disabled
                           value={this.state.headerData.Requester}
+                          style={styles.content}
                         />
                       </Item>
                     </Col>
                     <Col>
                       <Item stackedLabel>
-                        <Label>Ship To</Label>
-                        <Input disabled value={this.state.headerData.ShipTo} />
+                        <Label style={styles.label}>Ship To</Label>
+                        <Input
+                          disabled
+                          value={this.state.headerData.ShipTo}
+                          style={styles.content}
+                        />
                       </Item>
                     </Col>
                   </Row>
                   <Item stackedLabel>
-                    <Label>Address</Label>
+                    <Label style={styles.label}>Address</Label>
                     <Textarea
                       disabled
                       value={
@@ -277,28 +322,30 @@ export default class PurchaseRequisitionHeader extends Component {
                         this.state.headerData.ShipAdd3
                       }
                       rowSpan={3}
-                      style={{ alignSelf: "flex-start" }}
+                      style={[styles.content, { alignSelf: "flex-start" }]}
                     />
                   </Item>
                   <Item stackedLabel>
-                    <Label>Remarks</Label>
+                    <Label style={styles.label}>Remarks</Label>
                     <Textarea
                       disabled
                       value={this.state.headerData.Remark}
                       rowSpan={3}
-                      style={{ alignSelf: "flex-start" }}
+                      style={[styles.content, { alignSelf: "flex-start" }]}
                     />
                   </Item>
                   <Item stackedLabel last>
-                    <Label>Comments</Label>
+                    <Label style={styles.label}>Comments</Label>
                     <Textarea
                       disabled
                       value={this.state.headerData.Memo}
                       rowSpan={3}
-                      style={{ alignSelf: "flex-start" }}
+                      style={[styles.content, { alignSelf: "flex-start" }]}
                     />
                   </Item>
-                  <Label style={{ paddingLeft: 15, paddingTop: 10 }}>
+                  <Label
+                    style={[styles.label, { paddingLeft: 15, paddingTop: 10 }]}
+                  >
                     Attachments
                   </Label>
                   <ScrollView
@@ -372,6 +419,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "300",
     marginBottom: 20
+  },
+  label: {
+    color: global.foregroundColor
+  },
+  content: {
+    color: global.foregroundColor
   },
   flatList: {
     flex: 1

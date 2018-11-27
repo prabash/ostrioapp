@@ -162,11 +162,11 @@ export default class PurchaseRequisitionsPage extends Component {
                 }}
               >
                 <Text
-                  style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20 }}
+                  style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20, color: global.foregroundColor }}
                 >
                   Purchase
                 </Text>
-                <Text style={{ fontSize: 30, fontWeight: "100" }}>
+                <Text style={{ fontSize: 30, fontWeight: "100", color: global.foregroundColor }}>
                   &nbsp;Requisitions
                 </Text>
               </Row>
@@ -190,7 +190,8 @@ export default class PurchaseRequisitionsPage extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: global.backgroundColor
   },
   profileHeader: {
     flex: 1,

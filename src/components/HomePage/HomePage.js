@@ -93,7 +93,7 @@ export default class HomePage extends Component {
         console.log("USERID : " + permissionDetails.userId);
 
         getUserInfo(sessionKey, permissionDetails.userId).then(userInfo => {
-          this.setState({ role : this.capitalizeFirstLetter(keyDetails.role)})
+          this.setState({ role: this.capitalizeFirstLetter(keyDetails.role) });
           if (
             typeof userInfo.data.firstName != "undefined" &&
             userInfo.data.firstName !== null
@@ -226,7 +226,12 @@ export default class HomePage extends Component {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 36, fontWeight: "100", paddingLeft: 30 }}
+                    style={{
+                      fontSize: 36,
+                      fontWeight: "100",
+                      paddingLeft: 30,
+                      color: global.foregroundColor
+                    }}
                   >
                     Hello
                   </Text>
@@ -243,7 +248,12 @@ export default class HomePage extends Component {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 34, fontWeight: "500", paddingLeft: 30 }}
+                    style={{
+                      fontSize: 34,
+                      fontWeight: "500",
+                      paddingLeft: 30,
+                      color: global.foregroundColor
+                    }}
                   >
                     {username}!
                   </Text>
@@ -263,7 +273,8 @@ export default class HomePage extends Component {
                         style={{
                           fontSize: 14,
                           fontWeight: "500",
-                          paddingLeft: 30
+                          paddingLeft: 30,
+                          color: global.foregroundColor
                         }}
                       >
                         {role}
@@ -293,7 +304,8 @@ export default class HomePage extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: global.backgroundColor
   },
   profileHeader: {
     flex: 1,
@@ -301,7 +313,8 @@ const styles = StyleSheet.create({
   },
   profileHeaderContent: {
     padding: 30,
-    alignItems: "center"
+    alignItems: "center",
+    color: global.foregroundColor
   },
   avatar: {
     width: 130,
