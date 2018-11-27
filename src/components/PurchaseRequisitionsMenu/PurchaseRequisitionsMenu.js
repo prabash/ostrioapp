@@ -115,7 +115,7 @@ export default class PurchaseRequisitionsPage extends Component {
                       }}
                     >
                       <Text
-                        style={{ color: global.foregroundColor, fontSize: 11 }}
+                        style={{ color: global.accentOffsetColor, fontSize: 11 }}
                       >
                         {" "}
                         {item.count}{" "}

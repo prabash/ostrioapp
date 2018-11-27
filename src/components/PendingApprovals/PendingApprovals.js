@@ -258,7 +258,7 @@ export default class PendingApprovals extends Component {
         key={section.PRNumber}
         badge={{
           value: section.PRDetailMasters.length,
-          textStyle: { color: global.foregroundColor },
+          textStyle: { color: global.accentOffsetColor },
           containerStyle: { backgroundColor: global.accentColor }
         }}
         leftIcon={

@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   },
   signInBtnText: {
     textAlign: "center",
-    color: global.foregroundColor,
+    color: global.accentOffsetColor,
     fontSize: 16,
     fontWeight: "200"
   },
