@@ -105,12 +105,15 @@ export default class Login extends Component {
             >
               <Text style={styles.signInBtnText}>SIGN IN</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.fgtPasswordContainer}
-              onPress={() => this.props.navigation.navigate("ForgotPassword")}
-            >
-              <Text style={styles.fgtPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity>
+
+            <View style= {{ alignItems: "flex-end"}}>
+              <TouchableOpacity
+                style={styles.fgtPasswordContainer}
+                onPress={() => this.props.navigation.navigate("ForgotPassword")}
+              >
+                <Text style={styles.fgtPasswordText}>Forgot Password?</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
         <Toast
@@ -150,6 +153,7 @@ const styles = StyleSheet.create({
   loginFormContainer: {
     flex: 1,
     backgroundColor: global.backgroundColor,
+    alignItems: "center",
     padding: 20
   },
   inputContainer: {
@@ -161,7 +165,8 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     paddingLeft: 10,
     marginBottom: 10,
-    height: 40
+    height: 40,
+    width: 370
   },
   inputIcon: {
     paddingLeft: 5
@@ -177,7 +182,8 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center",
     borderRadius: 100,
-    marginBottom: 10
+    marginBottom: 10,
+    width: 370
   },
   signInBtnText: {
     textAlign: "center",
