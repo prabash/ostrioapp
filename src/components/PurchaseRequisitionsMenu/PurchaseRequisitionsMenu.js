@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
+import AppPlatfrom from "../../Global/AppPlatform";
 
 const data = [
   {
@@ -48,12 +49,23 @@ const formatData = (data, numColumns) => {
   return data;
 };
 
-const numColumns = 3;
-
 export default class PurchaseRequisitionsPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { viewRef: null };
+    this.state = {
+      viewRef: null,
+      numColumns: AppPlatfrom.isPortrait() ? 3 : 5,
+      orientation: AppPlatfrom.isPortrait() ? "portrait" : "landscape",
+      devicetype: AppPlatfrom.isTablet() ? "tablet" : "phone"
+    };
+
+    // Event Listener for orientation changes
+    Dimensions.addEventListener("change", () => {
+      this.setState({
+        orientation: AppPlatfrom.isPortrait() ? "portrait" : "landscape",
+        numColumns: AppPlatfrom.isPortrait() ? 3 : 5
+      });
+    });
   }
 
   imageLoaded() {
@@ -115,7 +127,10 @@ export default class PurchaseRequisitionsPage extends Component {
                       }}
                     >
                       <Text
-                        style={{ color: global.accentOffsetColor, fontSize: 11 }}
+                        style={{
+                          color: global.accentOffsetColor,
+                          fontSize: 11
+                        }}
                       >
                         {" "}
                         {item.count}{" "}
@@ -162,23 +177,40 @@ export default class PurchaseRequisitionsPage extends Component {
                 }}
               >
                 <Text
-                  style={{ fontSize: 30, fontWeight: "500", paddingLeft: 20, color: global.foregroundColor }}
+                  style={{
+                    fontSize: 30,
+                    fontWeight: "500",
+                    paddingLeft: 20,
+                    color: global.foregroundColor
+                  }}
                 >
                   Purchase
                 </Text>
-                <Text style={{ fontSize: 30, fontWeight: "100", color: global.foregroundColor }}>
+                <Text
+                  style={{
+                    fontSize: 30,
+                    fontWeight: "100",
+                    color: global.foregroundColor
+                  }}
+                >
                   &nbsp;Requisitions
                 </Text>
               </Row>
+              <Row />
             </Grid>
           </Row>
           <Row size={3}>
             <View style={styles.menuItemContainer}>
               <FlatList
-                data={formatData(data, numColumns)}
+                key={
+                  this.state.orientation == "portrait"
+                    ? "portrait"
+                    : "landscape"
+                }
+                data={formatData(data, this.state.numColumns)}
                 style={styles.flatList}
                 renderItem={this.renderItem}
-                numColumns={numColumns}
+                numColumns={this.state.numColumns}
               />
             </View>
           </Row>
@@ -230,9 +262,9 @@ const styles = StyleSheet.create({
   flatListItem: {
     backgroundColor: global.backgroundOffsetColor,
     flex: 1,
-    margin: 2,
+    margin: 3,
     borderRadius: 10,
-    height: Dimensions.get("window").width / numColumns
+    height: 135
   },
   flatListItemInvisible: {
     backgroundColor: "transparent"

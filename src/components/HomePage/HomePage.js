@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  Dimensions
+  Dimensions,
+  Platform
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { onSignOut, getSessionKey } from "../../Global/Auth";
 import { getUserInfo, getSessionKeyDetails } from "../../services/LoginService";
+import AppPlatfrom from "../../Global/AppPlatform";
 
 const data = [
   {
@@ -70,16 +72,25 @@ const formatData = (data, numColumns) => {
   return data;
 };
 
-const numColumns = 3;
-
 export default class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       viewRef: null,
       username: "User",
-      role: null
+      role: null,
+      numColumns: AppPlatfrom.isPortrait() ? 3 : 5,
+      orientation: AppPlatfrom.isPortrait() ? "portrait" : "landscape",
+      devicetype: AppPlatfrom.isTablet() ? "tablet" : "phone"
     };
+
+    // Event Listener for orientation changes
+    Dimensions.addEventListener("change", () => {
+      this.setState({
+        orientation: AppPlatfrom.isPortrait() ? "portrait" : "landscape",
+        numColumns: AppPlatfrom.isPortrait() ? 3 : 5
+      });
+    });
   }
 
   componentDidMount() {
@@ -122,6 +133,10 @@ export default class HomePage extends Component {
   imageLoaded() {
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) });
   }
+
+  getNumColumns = () => {
+    return this.state.numColumns;
+  };
 
   menuItemOnPress = key => {
     console.log("+++++++++++++++++++++ " + key);
@@ -176,7 +191,10 @@ export default class HomePage extends Component {
                       }}
                     >
                       <Text
-                        style={{ color: global.accentOffsetColor, fontSize: 11 }}
+                        style={{
+                          color: global.accentOffsetColor,
+                          fontSize: 11
+                        }}
                       >
                         {" "}
                         {item.count}{" "}
@@ -225,40 +243,56 @@ export default class HomePage extends Component {
                     alignContent: "flex-end"
                   }}
                 >
-                  <Text
-                    style={{
-                      fontSize: 36,
-                      fontWeight: "100",
-                      paddingLeft: 30,
-                      color: global.foregroundColor
-                    }}
-                  >
-                    Hello
-                  </Text>
+                  {this.state.orientation == "landscape" ? (
+                    <Text
+                      style={{
+                        fontSize: 34,
+                        fontWeight: "500",
+                        paddingLeft: 30,
+                        color: global.foregroundColor
+                      }}
+                    >
+                      Hello&nbsp;{username}!
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 36,
+                        fontWeight: "100",
+                        paddingLeft: 30,
+                        color: global.foregroundColor
+                      }}
+                    >
+                      Hello
+                    </Text>
+                  )}
                 </Col>
                 <Col size={2} />
               </Row>
-              <Row size={2}>
-                <Col
-                  size={2.5}
-                  style={{
-                    alignItems: "flex-start",
-                    justifyContent: "flex-start",
-                    alignContent: "flex-start"
-                  }}
-                >
-                  <Text
+              {this.state.orientation == "portrait" ? (
+                <Row size={2}>
+                  <Col
+                    size={2.5}
                     style={{
-                      fontSize: 34,
-                      fontWeight: "500",
-                      paddingLeft: 30,
-                      color: global.foregroundColor
+                      alignItems: "flex-start",
+                      justifyContent: "flex-start",
+                      alignContent: "flex-start"
                     }}
                   >
-                    {username}!
-                  </Text>
-                </Col>
-              </Row>
+                    <Text
+                      style={{
+                        fontSize: 34,
+                        fontWeight: "500",
+                        paddingLeft: 30,
+                        color: global.foregroundColor
+                      }}
+                    >
+                      {username}!
+                    </Text>
+                  </Col>
+                </Row>
+              ) : null}
+
               <Row size={1.5}>
                 <Col
                   size={2.5}
@@ -289,10 +323,16 @@ export default class HomePage extends Component {
           <Row size={3}>
             <View style={styles.menuItemContainer}>
               <FlatList
-                data={formatData(data, numColumns)}
+                key={
+                  this.state.orientation == "portrait"
+                    ? "portrait"
+                    : "landscape"
+                }
+                extraData={this.state}
+                data={formatData(data, this.state.numColumns)}
                 style={styles.flatList}
                 renderItem={this.renderItem}
-                numColumns={numColumns}
+                numColumns={this.state.numColumns}
               />
             </View>
           </Row>
@@ -345,9 +385,9 @@ const styles = StyleSheet.create({
   flatListItem: {
     backgroundColor: global.backgroundOffsetColor,
     flex: 1,
-    margin: 2,
+    margin: 3,
     borderRadius: 10,
-    height: Dimensions.get("window").width / numColumns
+    height: 135
   },
   flatListItemInvisible: {
     backgroundColor: "transparent"
