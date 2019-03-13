@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const mainURL = `http://dmsuat.eastus.cloudapp.azure.com/OSTRIOMobile/PRAppService/PRDataService.svc/`;
+const mainURL = `http://219.92.4.33:8081/OSTRIOMobile/PRAppService/PRDataService.svc/`;
 
 export const getAllPRInfo = (name, test) => {
    
@@ -19,7 +19,7 @@ export const getPRLineById = (PRLineId) => {
     return axios.get(URL).then(res => res);
 }
 
-export const getPRInfoPaging = (skip, take) => {
-    const URL = mainURL + `GetPRDetails/${skip}/${take}`;
+export const getPRInfoPaging = (skip, take, username) => {
+    const URL = mainURL + `GetPRDetails/${skip}/${take}/${username}`;
     return axios.get(URL).then(res => res);
 }

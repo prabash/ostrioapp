@@ -1,7 +1,7 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
-const mainURL = `http://dmsuat.eastus.cloudapp.azure.com/`;
+const mainURL = `http://219.92.4.33:8081/`;
 
 export const login = (_username, _password) => {
   const loginURL = `filemanagement/user_management/users/login`;

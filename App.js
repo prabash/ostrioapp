@@ -4,10 +4,7 @@ import { isSignedIn } from "./src/Global/Auth";
 
 import "./src/Global/Global";
 import { createRootNavigator } from "./src/Global/Router";
-import HomePage from "./src/components/HomePage/HomePage";
-import PurchaseRequisitionHeader from "./src/components/PurchaseRequisitionHeader/PurchaseRequisitionHeader";
-import PurchaseRequisitionLine from "./src/components/PurchaseRequisitionLine/PurchaseRequisitionLine";
-import PushNotifications from "./src/components/TestScreens/PushNotifications";
+import { saveNotifToken } from "./src/Global/Auth";
 
 const instructions = Platform.select({
   ios: "Press Cmd+R to reload,\n" + "Cmd+D or shake for dev menu",
@@ -21,7 +18,9 @@ var PushNotification = require("react-native-push-notification");
 PushNotification.configure({
   // (optional) Called when Token is generated (iOS and Android)
   onRegister: function(token) {
-    console.log("TOKEN:", token);
+    //alert('test');
+    console.log("+++++++++++++ FULL TOKEN:", token);
+    //saveNotifToken(token.token).then(() => console.log("TOKEN:", token.token));
   },
 
   // (required) Called when a remote or local notification is opened or received
@@ -29,21 +28,20 @@ PushNotification.configure({
     console.log("NOTIFICATION:", notification);
 
     setTimeout(() => {
-      if(!notification['foreground']){
+      if (!notification["foreground"]) {
         ToastAndroid.show("You've clicked!", ToastAndroid.SHORT);
       }
     }, 1);
 
     PushNotification.localNotificationSchedule({
       //... You can use all the options from localNotifications
-      message: notification['name'], // (required)
-      date: new Date(Date.now() + (60 * 1000)) // in 60 secs
+      message: notification["name"], // (required)
+      date: new Date(Date.now() + 60 * 1000) // in 60 secs
     });
-
   },
 
   // ANDROID ONLY: GCM or FCM Sender ID (product_number) (optional - not required for local notifications, but is need to receive remote push notifications)
-  senderID: "783426617393",
+  senderID: "525959144036",
   popInitialNotification: true,
   requestPermissions: true
 });
@@ -70,7 +68,7 @@ export default class App extends Component<Props> {
     if (!checkedSignIn) {
       return null;
     }
-    
+
     const Layout = createRootNavigator(signedIn);
     return <Layout />;
   }

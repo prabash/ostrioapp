@@ -25,6 +25,8 @@ import {
   getAllPRInfo,
   getPRInfoPaging
 } from "../../services/PurchaseRequisitionsService";
+import { getSessionKeyDetails } from "../../services/LoginService";
+import { getSessionKey } from "../../Global/Auth";
 
 function getJsonData() {
   return fetch(
@@ -61,17 +63,28 @@ export default class PendingApprovals extends Component {
       loadMoreBusy: false,
       showLoadMore: false,
       originalShowLoadMore: false,
-      showSearchBar: false
+      showSearchBar: false,
+      username: ""
     };
   }
 
   componentDidMount() {
-    this.loadPendingApprovals();
+    getSessionKey().then(sessionKey => {
+      console.log("ASYNC STORAGE KEY : " + sessionKey);
+      if (sessionKey !== null) {
+        console.log(getSessionKeyDetails(sessionKey));
+        var keyDetails = getSessionKeyDetails(sessionKey);
+        this.setState({ username: keyDetails.unique_name });
+
+        this.loadPendingApprovals();
+      }
+    });
   }
 
   loadPendingApprovals = () => {
     this.setState({ loadMoreBusy: true });
-    getPRInfoPaging(skip, global.prTakeValue).then(res => {
+    console.log("+++++++++++++++++++ USERNAME" + this.state.username);
+    getPRInfoPaging(skip, global.prTakeValue, this.state.username).then(res => {
       const jsonArray = JSON.parse(res.data);
 
       if (jsonArray.length == global.prTakeValue) {
@@ -403,7 +416,9 @@ export default class PendingApprovals extends Component {
               </Button>
             </Left>
             <Body>
-              <Title style={{ color: global.headerForegroundColor }}>Pending Approvals</Title>
+              <Title style={{ color: global.headerForegroundColor }}>
+                Pending Approvals
+              </Title>
             </Body>
             <Right>
               <Button transparent>

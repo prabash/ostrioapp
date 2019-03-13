@@ -26,6 +26,8 @@ import {
 import Accordion from "react-native-collapsible/Accordion";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { global } from "core-js";
+import { getSessionKeyDetails } from "../../services/LoginService";
+import { getSessionKey } from "../../Global/Auth";
 
 var skip = 0;
 export default class PendingApprovals extends Component {
@@ -46,12 +48,22 @@ export default class PendingApprovals extends Component {
       loadMoreBusy: false,
       showLoadMore: false,
       originalShowLoadMore: false,
-      showSearchBar: false
+      showSearchBar: false,
+      username: ""
     };
   }
 
   componentDidMount() {
-    this.loadAllApprovals();
+    getSessionKey().then(sessionKey => {
+      console.log("ASYNC STORAGE KEY : " + sessionKey);
+      if (sessionKey !== null) {
+        console.log(getSessionKeyDetails(sessionKey));
+        var keyDetails = getSessionKeyDetails(sessionKey);
+        this.setState({ username: keyDetails.unique_name });
+
+        this.loadAllApprovals();
+      }
+    });
   }
 
   toggleSearchBar = () => {
@@ -132,7 +144,8 @@ export default class PendingApprovals extends Component {
 
   loadAllApprovals = () => {
     this.setState({ loadMoreBusy: true });
-    getPRInfoPaging(skip, global.prTakeValue).then(res => {
+    console.log("+++++++++++++++++++ USERNAME" + this.state.username);
+    getPRInfoPaging(skip, global.prTakeValue, this.state.username).then(res => {
       const jsonArray = JSON.parse(res.data);
       //const jsonArray = res.data;
 
