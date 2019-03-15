@@ -11,28 +11,10 @@ import {
 import { Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import AppPlatfrom from "../../Global/AppPlatform";
-
-const data = [
-  {
-    key: "Pending Approvals",
-    icon: "clock-fast",
-    color: "#eb4d4b",
-    count: 20,
-    badgeColor: global.accentColor
-  },
-  {
-    key: "All Purchase Requisitions",
-    icon: "playlist-check",
-    color: "#6ab04c",
-    count: 50,
-    badgeColor: global.accentColor
-  },
-  {
-    key: "Home",
-    icon: "home-outline",
-    color: "#ffbe76"
-  }
-];
+import {
+  getAllPRCount,
+  getPendingPRCount
+} from "../../services/PurchaseRequisitionsService";
 
 const formatData = (data, numColumns) => {
   const numberOfFullRows = Math.floor(data.length / numColumns);
@@ -56,7 +38,28 @@ export default class PurchaseRequisitionsPage extends Component {
       viewRef: null,
       numColumns: AppPlatfrom.isPortrait() ? 3 : 5,
       orientation: AppPlatfrom.isPortrait() ? "portrait" : "landscape",
-      devicetype: AppPlatfrom.isTablet() ? "tablet" : "phone"
+      devicetype: AppPlatfrom.isTablet() ? "tablet" : "phone",
+      menuData: [
+        {
+          key: "Pending Approvals",
+          icon: "clock-fast",
+          color: "#eb4d4b",
+          count: 20,
+          badgeColor: global.accentColor
+        },
+        {
+          key: "All Purchase Requisitions",
+          icon: "playlist-check",
+          color: "#6ab04c",
+          count: 50,
+          badgeColor: global.accentColor
+        },
+        {
+          key: "Home",
+          icon: "home-outline",
+          color: "#ffbe76"
+        }
+      ]
     };
 
     // Event Listener for orientation changes
@@ -66,6 +69,53 @@ export default class PurchaseRequisitionsPage extends Component {
         numColumns: AppPlatfrom.isPortrait() ? 3 : 5
       });
     });
+  }
+
+  componentDidMount() {
+    var pendingApprovalsCount = 0;
+    var allApprovalsCount = 0;
+
+    // getAllPRCount().then(res => {
+    //   var count = res.data;
+    //   console.log("+++++++" + count);
+    //   allApprovalsCount = count;
+    // });
+
+    // getPendingPRCount().then(res => {
+    //   var count = res.data;
+    //   console.log("+++++++" + count);
+    //   pendingApprovalsCount = count;
+    // });
+
+    var currentMenuData = this.state.menuData;
+    for (var i = 0; i < currentMenuData.length; i++) {
+      var obj = currentMenuData[i];
+      if (obj.key === "Pending Approvals") {
+        obj.count = pendingApprovalsCount;
+      }
+      if (obj.key === "All Purchase Requisitions"){
+        obj.count = allApprovalsCount;
+      }
+    }
+
+    this.setState(
+      {
+        menuData: currentMenuData,
+        // THIS IS JUST A HACK TO CHANGE THE KEY SO THAT THE FLATLIST WILL RELOAD
+        // THIS HAS BEEN RECTIFIED IN THE CALL BACK BY PUTTING IT BACK
+        orientation: AppPlatfrom.isPortrait() ? "landscape" : "portrait"
+      },
+      () => {
+        this.setState(
+          {
+            orientation: AppPlatfrom.isPortrait() ? "portrait" : "landscape"
+          },
+          () => {
+            console.log(this.state.orientation);
+          }
+        );
+      }
+    );
   }
 
   imageLoaded() {
@@ -162,6 +212,7 @@ export default class PurchaseRequisitionsPage extends Component {
   };
 
   render() {
+    const { menuData, numColumns, orientation } = this.state;
     return (
       <View style={styles.container}>
         <Grid>
@@ -202,15 +253,11 @@ export default class PurchaseRequisitionsPage extends Component {
           <Row size={3}>
             <View style={styles.menuItemContainer}>
               <FlatList
-                key={
-                  this.state.orientation == "portrait"
-                    ? "portrait"
-                    : "landscape"
-                }
-                data={formatData(data, this.state.numColumns)}
+                key={orientation == "portrait" ? "portrait" : "landscape"}
+                data={formatData(menuData, numColumns)}
                 style={styles.flatList}
                 renderItem={this.renderItem}
-                numColumns={this.state.numColumns}
+                numColumns={numColumns}
               />
             </View>
           </Row>

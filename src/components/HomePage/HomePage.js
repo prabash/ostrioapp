@@ -11,8 +11,9 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { onSignOut, getSessionKey } from "../../Global/Auth";
+import { onSignOut, getSessionKey, getNotifToken } from "../../Global/Auth";
 import { getUserInfo, getSessionKeyDetails } from "../../services/LoginService";
+import { registerUserToken } from "../../services/NotificationService";
 import AppPlatfrom from "../../Global/AppPlatform";
 
 const data = [
@@ -78,6 +79,7 @@ export default class HomePage extends Component {
     this.state = {
       viewRef: null,
       username: "User",
+      unique_name: "",
       role: null,
       numColumns: AppPlatfrom.isPortrait() ? 3 : 5,
       orientation: AppPlatfrom.isPortrait() ? "portrait" : "landscape",
@@ -100,6 +102,7 @@ export default class HomePage extends Component {
         console.log(getSessionKeyDetails(sessionKey));
         var keyDetails = getSessionKeyDetails(sessionKey);
         console.log("KEY DETAILS : " + keyDetails);
+
         var permissionDetails = JSON.parse(keyDetails.permission);
         console.log("USERID : " + permissionDetails.userId);
 
@@ -122,8 +125,20 @@ export default class HomePage extends Component {
             });
           }
         });
+
+        this.setState({ unique_name: keyDetails.unique_name });
       }
     });
+
+    getNotifToken().then(notificationToken => {
+      console.log("+++++ HOME PAGE : TOKEN : " + notificationToken);
+      console.log("+++++ HOME PAGE : UNQIUE_NAME: " + this.state.unique_name);
+      registerUserToken(this.state.unique_name, notificationToken).then(res => {
+        // get the service data
+        const serviceData = res.data;
+        console.log("+++  REGISTER DEVICE RESPONSE : " + serviceData);
+      });
+    })
   }
 
   capitalizeFirstLetter = string => {

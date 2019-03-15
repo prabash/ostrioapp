@@ -20,7 +20,7 @@ PushNotification.configure({
   onRegister: function(token) {
     //alert('test');
     console.log("+++++++++++++ FULL TOKEN:", token);
-    //saveNotifToken(token.token).then(() => console.log("TOKEN:", token.token));
+    saveNotifToken(token.token).then(() => console.log("TOKEN:", token.token));
   },
 
   // (required) Called when a remote or local notification is opened or received

@@ -4,12 +4,11 @@ const mainURL = `http://219.92.4.33:8081/OSTRIOMobile/OSTPushNotificationService
 
 export const registerUserToken = (_userId, _deviceId) => {
   const subURL = `registerdevice`;
-
   return axios.post(
     mainURL + subURL,
     {
-      userId: _userId,
-      deviceId: _deviceId
+      DeviceId: _deviceId,
+      UserId: _userId
     },
     {
       headers: {

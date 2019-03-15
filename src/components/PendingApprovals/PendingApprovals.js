@@ -22,7 +22,8 @@ import { ListItem, Icon, SearchBar } from "react-native-elements";
 import Accordion from "react-native-collapsible/Accordion";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import {
-  getAllPRInfo,
+  approvePRs,
+  rejectPRs,
   getPRInfoPaging
 } from "../../services/PurchaseRequisitionsService";
 import { getSessionKeyDetails } from "../../services/LoginService";
@@ -244,6 +245,53 @@ export default class PendingApprovals extends Component {
     // add the filteredContent to the respective state variable
     const filteredContent = filterData;
     this.setState({ filteredContent });
+  };
+
+  approvePRDetails = () => {
+    const content = this.state.content;
+    if (this.state.content.length > 0) {
+      var dataToApprove = [];
+
+      for (var i = 0; i < content.length; i++) {
+        var obj = content[i];
+        if (obj.PRHeaderChecked) {
+          dataToApprove.push(obj);
+        }
+      }
+      if (dataToApprove.length > 0) {
+        approvePRs(dataToApprove).then(res => {
+          console.log(res.data);
+        });
+      } else {
+        alert("No data to be approved!");
+      }
+    } else {
+      alert("No data!");
+    }
+  };
+
+  rejectPRDetails = () => {
+    const content = this.state.content;
+    if (this.state.content.length > 0) {
+      var dataToReject = [];
+
+      for (var i = 0; i < content.length; i++) {
+        var obj = content[i];
+        if (obj.PRHeaderChecked) {
+          dataToReject.push(obj);
+        }
+      }
+
+      if (dataToReject.length > 0) {
+        rejectPRs(dataToReject).then(res => {
+          console.log(res.data);
+        });
+      } else {
+        alert("No data to be rejected!");
+      }
+    } else {
+      alert("No data!");
+    }
   };
 
   static navigationOptions = {
@@ -523,12 +571,22 @@ export default class PendingApprovals extends Component {
               </ScrollView>
               <View style={styles.buttonContainer}>
                 <View style={styles.approveRejectButtonsView}>
-                  <Button ful success style={styles.approveRejectButton}>
+                  <Button
+                    ful
+                    success
+                    style={styles.approveRejectButton}
+                    onPress={() => this.approvePRDetails()}
+                  >
                     <Text style={styles.approveRejectButtonText}>APPROVE</Text>
                   </Button>
                 </View>
                 <View style={styles.approveRejectButtonsView}>
-                  <Button ful danger style={styles.approveRejectButton}>
+                  <Button
+                    ful
+                    danger
+                    style={styles.approveRejectButton}
+                    onPress={() => this.rejectPRDetails()}
+                  >
                     <Text style={styles.approveRejectButtonText}>REJECT</Text>
                   </Button>
                 </View>
