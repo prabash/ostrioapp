@@ -6,6 +6,8 @@ import {
   Text,
   View,
   Image,
+  TouchableOpacity,
+  FlatList,
   ActivityIndicator
 } from "react-native";
 import {
@@ -22,7 +24,7 @@ import {
 } from "native-base";
 import { ListItem, Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { getPRLineById } from "../../services/PurchaseRequisitionsService";
+import { getPRLineById, getAttachments } from "../../services/PurchaseRequisitionsService";
 
 export default class PurchaseRequisitionLine extends Component {
   constructor(props) {
@@ -54,17 +56,79 @@ export default class PurchaseRequisitionLine extends Component {
       description: "Refreshments for level 2\nROOM-TIDBITS\n1. Sweets",
       remarks:
         "Refreshments for level 2\nThe final will be based on price \nDay of the delivery may vary",
-      memo: "Test Comments"
+      memo: "Test Comments",
+      attachments: [
+        {
+          key: "1234.png",
+          icon: "image"
+        },
+        {
+          key: "abcas.pdf",
+          icon: "paperclip"
+        },
+        {
+          key: "124-131.jpg",
+          icon: "image"
+        },
+        {
+          key: "afuag.jpg",
+          icon: "image"
+        },
+        {
+          key: "asgome.pdf",
+          icon: "paperclip"
+        },
+        {
+          key: "2423.pdf",
+          icon: "paperclip"
+        },
+        {
+          key: "5424.pdf",
+          icon: "paperclip"
+        }
+      ]
     };
   }
 
   componentDidMount() {
+    var PRHeaderId = this.props.navigation.state.params.PRHeaderID;
     var PRLineId = this.props.navigation.state.params.PRLineId;
+    var PRLineNo = this.props.navigation.state.params.PRLineNo;
+    console.log('PRHeaderID : ' + PRHeaderId);
+
     getPRLineById(PRLineId).then(res => {
       const lineData = JSON.parse(res.data);
       this.setState({ lineData: lineData, loading: false });
     });
+
+    console.log('+++++ ATTACHMENTS FOR HeaderID :' + PRHeaderId + ', PRLineNo: ' + PRLineNo);
+    getAttachments(PRHeaderId, PRLineNo).then(res => {  
+      console.log(res)
+    });
   }
+
+  renderItem = ({ item, index }) => {
+    if (item.empty === true) {
+      return (
+        <View style={[styles.flatListItem, styles.flatListItemInvisible]} />
+      );
+    }
+    return (
+      <View style={styles.flatListItem}>
+        <TouchableOpacity style={styles.flatListItem}>
+          <View>
+            <Icon
+              name={item.icon}
+              type="evilicon"
+              size={30}
+              color={global.themeColor}
+            />
+            <Text style={styles.flatListItemText}>{item.key}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   render() {
     // If the data is still loading, return the activity indicator view with heading
@@ -494,6 +558,28 @@ export default class PurchaseRequisitionLine extends Component {
                       </Item>
                     </Col>
                   </Row>
+                  <Label
+                    style={[styles.label, { paddingLeft: 15, paddingTop: 10 }]}
+                  >
+                    Attachments
+                  </Label>
+                  <ScrollView
+                    horizontal
+                    style={{
+                      marginLeft: 20,
+                      marginBottom: 20,
+                      marginTop: 10,
+                      marginRight: 10,
+                      paddingBottom: 5
+                    }}
+                  >
+                    <FlatList
+                      data={this.state.attachments}
+                      style={styles.flatList}
+                      renderItem={this.renderItem}
+                      horizontal
+                    />
+                  </ScrollView>
                 </Form>
               </ScrollView>
             </View>
@@ -548,6 +634,27 @@ const styles = StyleSheet.create({
   mainTitle: {
     fontSize: 18,
     fontWeight: "bold"
+  },
+  flatList: {
+    flex: 1
+  },
+  flatListItem: {
+    backgroundColor: global.backgroundOffsetColor,
+    flex: 1,
+    margin: 5,
+    borderRadius: 10,
+    height: 100,
+    width: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    alignContent: "center"
+  },
+  flatListItemInvisible: {
+    backgroundColor: "transparent"
+  },
+  flatListItemText: {
+    color: global.foregroundColor,
+    fontSize: 12
   },
   title: {
     textAlign: "center",

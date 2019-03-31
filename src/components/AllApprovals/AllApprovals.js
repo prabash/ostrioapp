@@ -178,9 +178,9 @@ export default class PendingApprovals extends Component {
     this.props.navigation.navigate("PurchaseRequisitionHeader", { PRHeaderId });
   };
 
-  onPressLine = PRLineId => {
+  onPressLine = (PRHeaderID, PRLineId, PRLineNo) => {
     this.props.navigation.navigate("PurchaseRequisitionLine", {
-      PRLineId
+      PRHeaderID, PRLineId, PRLineNo
     });
   };
 
@@ -277,7 +277,7 @@ export default class PendingApprovals extends Component {
             style={{
               paddingLeft: 20
             }}
-            onPress={() => this.onPressLine(lineItem.ID)}
+            onPress={() => this.onPressLine(section.ID, lineItem.ID, lineItem.PRLine)}
           />
         }
         hideChevron

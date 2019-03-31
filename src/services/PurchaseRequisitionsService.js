@@ -45,3 +45,8 @@ export const rejectPRs = (PRDetails) => {
     const URL = mainURL + `RejectPR`;
     return axios.post(URL, PRDetails).then(res => res);
 }
+
+export const getAttachments = (PRHeaderId, PRLineNo) => {
+    const URL = mainURL + `GetAttachmentDetails/${PRHeaderId}/${PRLineNo}`;
+    return axios.get(URL).then(res => res);
+}

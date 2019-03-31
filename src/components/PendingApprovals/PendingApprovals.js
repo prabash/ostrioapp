@@ -104,6 +104,7 @@ export default class PendingApprovals extends Component {
       console.log(jsonArray);
       for (var i = 0; i < jsonArray.length; i++) {
         var obj = jsonArray[i];
+        obj.PR_Date = new Date();
         obj.PRHeaderChecked = false;
         for (var j = 0; j < obj.PRDetailMasters.length; j++) {
           var line = obj.PRDetailMasters[j];
@@ -206,9 +207,10 @@ export default class PendingApprovals extends Component {
   onPressHeader = PRHeaderId => {
     this.props.navigation.navigate("PurchaseRequisitionHeader", { PRHeaderId });
   };
-  onPressLine = PRLineId => {
+
+  onPressLine = (PRHeaderID, PRLineId, PRLineNo) => {
     this.props.navigation.navigate("PurchaseRequisitionLine", {
-      PRLineId
+      PRHeaderID, PRLineId, PRLineNo
     });
   };
 
@@ -259,6 +261,9 @@ export default class PendingApprovals extends Component {
         }
       }
       if (dataToApprove.length > 0) {
+        console.log(' ++++++++++++++ start dataToApprove');
+        console.log(dataToApprove);
+        console.log(' ++++++++++++++ end dataToApprove');
         approvePRs(dataToApprove).then(res => {
           console.log(res.data);
         });
@@ -342,6 +347,8 @@ export default class PendingApprovals extends Component {
   };
 
   renderContent = (section, _, isActive) => {
+    console.log('++++++++ RENDER CONTENT ');
+    console.log(section);
     return section.PRDetailMasters.map(lineItem => (
       <ListItem
         containerStyle={{ backgroundColor: global.backgroundOffsetColor }}
@@ -355,7 +362,7 @@ export default class PendingApprovals extends Component {
             name="archive"
             type="evilicon"
             color={global.foregroundColor}
-            onPress={() => this.onPressLine(lineItem.ID)}
+            onPress={() => this.onPressLine(section.ID, lineItem.ID, lineItem.PRLine)}
           />
         }
         switchButton

@@ -348,23 +348,6 @@ export default class PurchaseRequisitionHeader extends Component {
                   >
                     Attachments
                   </Label>
-                  <ScrollView
-                    horizontal
-                    style={{
-                      marginLeft: 20,
-                      marginBottom: 20,
-                      marginTop: 10,
-                      marginRight: 10,
-                      paddingBottom: 5
-                    }}
-                  >
-                    <FlatList
-                      data={this.state.attachments}
-                      style={styles.flatList}
-                      renderItem={this.renderItem}
-                      horizontal
-                    />
-                  </ScrollView>
                 </Form>
               </ScrollView>
             </View>
