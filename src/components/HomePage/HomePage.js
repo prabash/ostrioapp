@@ -14,49 +14,8 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import { onSignOut, getSessionKey, getNotifToken } from "../../Global/Auth";
 import { getUserInfo, getSessionKeyDetails } from "../../services/LoginService";
 import { registerUserToken } from "../../services/NotificationService";
+import { getAllPRCount } from "../../services/PurchaseRequisitionsService";
 import AppPlatfrom from "../../Global/AppPlatform";
-
-const data = [
-  {
-    key: "Purchase Requisition",
-    icon: "shopping",
-    count: 50,
-    badgeColor: global.accentColor,
-    color: "#ffbe76"
-  },
-  {
-    key: "Purchase Order",
-    icon: "fire-truck",
-    color: "#eb4d4b"
-  },
-  {
-    key: "Contracts",
-    icon: "clipboard-check-outline",
-    count: 20,
-    badgeColor: global.accentColor,
-    color: "#6ab04c"
-  },
-  {
-    key: "Schedule Agreements",
-    icon: "timetable",
-    color: "#e056fd"
-  },
-  {
-    key: "Test Item 1",
-    icon: "cube-send",
-    color: "#22a6b3"
-  },
-  {
-    key: "Test Item 2",
-    icon: "earth",
-    color: "#f9ca24"
-  },
-  {
-    key: "Logout",
-    icon: "logout",
-    color: "#ff7979"
-  }
-];
 
 const formatData = (data, numColumns) => {
   const numberOfFullRows = Math.floor(data.length / numColumns);
@@ -83,7 +42,46 @@ export default class HomePage extends Component {
       role: null,
       numColumns: AppPlatfrom.isPortrait() ? 3 : 5,
       orientation: AppPlatfrom.isPortrait() ? "portrait" : "landscape",
-      devicetype: AppPlatfrom.isTablet() ? "tablet" : "phone"
+      devicetype: AppPlatfrom.isTablet() ? "tablet" : "phone",
+      menuData: [
+        {
+          key: "Purchase Requisition",
+          icon: "shopping",
+          count: 0,
+          badgeColor: global.accentColor,
+          color: "#ffbe76"
+        },
+        {
+          key: "Purchase Order",
+          icon: "fire-truck",
+          color: "#eb4d4b"
+        },
+        {
+          key: "Contracts",
+          icon: "clipboard-check-outline",
+          color: "#6ab04c"
+        },
+        {
+          key: "Schedule Agreements",
+          icon: "timetable",
+          color: "#e056fd"
+        },
+        {
+          key: "Test Item 1",
+          icon: "cube-send",
+          color: "#22a6b3"
+        },
+        {
+          key: "Test Item 2",
+          icon: "earth",
+          color: "#f9ca24"
+        },
+        {
+          key: "Logout",
+          icon: "logout",
+          color: "#ff7979"
+        }
+      ]
     };
 
     // Event Listener for orientation changes
@@ -96,6 +94,8 @@ export default class HomePage extends Component {
   }
 
   componentDidMount() {
+    var allApprovalsCount = 0;
+
     getSessionKey().then(sessionKey => {
       console.log("ASYNC STORAGE KEY : " + sessionKey);
       if (sessionKey !== null) {
@@ -126,7 +126,42 @@ export default class HomePage extends Component {
           }
         });
 
-        this.setState({ unique_name: keyDetails.unique_name });
+        this.setState({ unique_name: keyDetails.unique_name }, () => {
+          getAllPRCount(this.state.unique_name).then(res => {
+            var count = res.data;
+            console.log("+++++++" + count);
+            allApprovalsCount = count;
+
+            var currentMenuData = this.state.menuData;
+            for (var i = 0; i < currentMenuData.length; i++) {
+              var obj = currentMenuData[i];
+              if (obj.key === "Purchase Requisition") {
+                obj.count = allApprovalsCount;
+              }
+            }
+
+            this.setState(
+              {
+                menuData: currentMenuData,
+                // THIS IS JUST A HACK TO CHANGE THE KEY SO THAT THE FLATLIST WILL RELOAD
+                // THIS HAS BEEN RECTIFIED IN THE CALL BACK BY PUTTING IT BACK
+                orientation: AppPlatfrom.isPortrait() ? "landscape" : "portrait"
+              },
+              () => {
+                this.setState(
+                  {
+                    orientation: AppPlatfrom.isPortrait()
+                      ? "portrait"
+                      : "landscape"
+                  },
+                  () => {
+                    console.log(this.state.orientation);
+                  }
+                );
+              }
+            );
+          });
+        });
       }
     });
 
@@ -138,7 +173,7 @@ export default class HomePage extends Component {
         const serviceData = res.data;
         console.log("+++  REGISTER DEVICE RESPONSE : " + serviceData);
       });
-    })
+    });
   }
 
   capitalizeFirstLetter = string => {
@@ -159,7 +194,9 @@ export default class HomePage extends Component {
       onSignOut().then(() => this.props.navigation.navigate("SignedOut"));
     }
     if (key == "Purchase Requisition") {
-      this.props.navigation.navigate("PurchaseRequisitionsMenu");
+      this.props.navigation.navigate("PurchaseRequisitionsMenu", {
+        username: this.state.unique_name
+      });
     }
   };
 
@@ -241,7 +278,7 @@ export default class HomePage extends Component {
   };
 
   render() {
-    const { username, role } = this.state;
+    const { menuData, username, role } = this.state;
     return (
       <View style={styles.container}>
         <Grid>
@@ -344,7 +381,7 @@ export default class HomePage extends Component {
                     : "landscape"
                 }
                 extraData={this.state}
-                data={formatData(data, this.state.numColumns)}
+                data={formatData(menuData, this.state.numColumns)}
                 style={styles.flatList}
                 renderItem={this.renderItem}
                 numColumns={this.state.numColumns}

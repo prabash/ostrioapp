@@ -24,7 +24,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import {
   approvePRs,
   rejectPRs,
-  getPRInfoPaging
+  GetPendingPRDetails
 } from "../../services/PurchaseRequisitionsService";
 import { getSessionKeyDetails } from "../../services/LoginService";
 import { getSessionKey } from "../../Global/Auth";
@@ -85,7 +85,7 @@ export default class PendingApprovals extends Component {
   loadPendingApprovals = () => {
     this.setState({ loadMoreBusy: true });
     console.log("+++++++++++++++++++ USERNAME" + this.state.username);
-    getPRInfoPaging(skip, global.prTakeValue, this.state.username).then(res => {
+    GetPendingPRDetails(skip, global.prTakeValue, this.state.username).then(res => {
       const jsonArray = JSON.parse(res.data);
 
       if (jsonArray.length == global.prTakeValue) {
@@ -266,6 +266,7 @@ export default class PendingApprovals extends Component {
         console.log(' ++++++++++++++ end dataToApprove');
         approvePRs(dataToApprove).then(res => {
           console.log(res.data);
+          alert(res.data);
         });
       } else {
         alert("No data to be approved!");

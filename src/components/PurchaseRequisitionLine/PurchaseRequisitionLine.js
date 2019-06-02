@@ -24,7 +24,12 @@ import {
 } from "native-base";
 import { ListItem, Icon } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { getPRLineById, getAttachments } from "../../services/PurchaseRequisitionsService";
+import RNFS from "react-native-fs";
+import FileViewer from "react-native-file-viewer";
+import {
+  getPRLineById,
+  getAttachments
+} from "../../services/PurchaseRequisitionsService";
 
 export default class PurchaseRequisitionLine extends Component {
   constructor(props) {
@@ -59,31 +64,14 @@ export default class PurchaseRequisitionLine extends Component {
       memo: "Test Comments",
       attachments: [
         {
-          key: "1234.png",
+          src:
+            "https://www.adobe.com/be_en/active-use/pdf/Alice_in_Wonderland.pdf",
+          name: "Alice In Wonderland",
           icon: "image"
         },
         {
-          key: "abcas.pdf",
-          icon: "paperclip"
-        },
-        {
-          key: "124-131.jpg",
-          icon: "image"
-        },
-        {
-          key: "afuag.jpg",
-          icon: "image"
-        },
-        {
-          key: "asgome.pdf",
-          icon: "paperclip"
-        },
-        {
-          key: "2423.pdf",
-          icon: "paperclip"
-        },
-        {
-          key: "5424.pdf",
+          src: "abcas.pdf",
+          name: "abcas.pdf",
           icon: "paperclip"
         }
       ]
@@ -94,18 +82,68 @@ export default class PurchaseRequisitionLine extends Component {
     var PRHeaderId = this.props.navigation.state.params.PRHeaderID;
     var PRLineId = this.props.navigation.state.params.PRLineId;
     var PRLineNo = this.props.navigation.state.params.PRLineNo;
-    console.log('PRHeaderID : ' + PRHeaderId);
+    console.log("PRHeaderID : " + PRHeaderId);
 
     getPRLineById(PRLineId).then(res => {
       const lineData = JSON.parse(res.data);
       this.setState({ lineData: lineData, loading: false });
     });
 
-    console.log('+++++ ATTACHMENTS FOR HeaderID :' + PRHeaderId + ', PRLineNo: ' + PRLineNo);
-    getAttachments(PRHeaderId, PRLineNo).then(res => {  
-      console.log(res)
+    console.log(
+      "+++++ ATTACHMENTS FOR HeaderID :" +
+        PRHeaderId +
+        ", PRLineNo: " +
+        PRLineNo
+    );
+    getAttachments(PRHeaderId, PRLineNo).then(res => {
+      const attachmentsJSON = JSON.parse(res.data);
+      var _attachments = [];
+
+      for (var i = 0; i < attachmentsJSON.length; i++) {
+        var iconImage = "";
+        var obj = attachmentsJSON[i];
+        if (obj.FileType === "docx" || obj.FileType === "pdf") {
+          iconImage = "paperclip";
+        } else {
+          iconImage = "image";
+        }
+        _attachments.push({
+          src: obj.FileLocation,
+          name: obj.FileName,
+          icon: iconImage
+        });
+      }
+
+      console.log ("_attachments : " + _attachments);
+      this.setState({
+        attachments: _attachments
+      });
     });
   }
+
+  getLocalPath = url => {
+    console.log("url" + url);
+    const filename = url.split("/").pop();
+    // feel free to change main path according to your requirements
+    return `${RNFS.DocumentDirectoryPath}/${filename}`;
+  };
+
+  viewFile = url => {
+    const localFile = this.getLocalPath(url);
+
+    const options = {
+      fromUrl: url,
+      toFile: localFile
+    };
+    RNFS.downloadFile(options)
+      .promise.then(() => FileViewer.open(localFile))
+      .then(() => {
+        // success
+      })
+      .catch(error => {
+        // error
+      });
+  };
 
   renderItem = ({ item, index }) => {
     if (item.empty === true) {
@@ -115,7 +153,10 @@ export default class PurchaseRequisitionLine extends Component {
     }
     return (
       <View style={styles.flatListItem}>
-        <TouchableOpacity style={styles.flatListItem}>
+        <TouchableOpacity
+          style={styles.flatListItem}
+          onPress={() => this.viewFile(item.src)}
+        >
           <View>
             <Icon
               name={item.icon}
@@ -123,7 +164,7 @@ export default class PurchaseRequisitionLine extends Component {
               size={30}
               color={global.themeColor}
             />
-            <Text style={styles.flatListItemText}>{item.key}</Text>
+            <Text style={styles.flatListItemText}>{item.name}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -153,7 +194,9 @@ export default class PurchaseRequisitionLine extends Component {
               </Button>
             </Left>
             <Body style={{ flex: 2 }}>
-              <Title style={{ color: global.headerForegroundColor }}>PR Line</Title>
+              <Title style={{ color: global.headerForegroundColor }}>
+                PR Line
+              </Title>
             </Body>
           </Header>
           <View style={styles.headerContainer}>
@@ -209,7 +252,9 @@ export default class PurchaseRequisitionLine extends Component {
             </Button>
           </Left>
           <Body style={{ flex: 2 }}>
-            <Title style={{ color: global.headerForegroundColor }}>PR Line</Title>
+            <Title style={{ color: global.headerForegroundColor }}>
+              PR Line
+            </Title>
           </Body>
         </Header>
         <Grid>
@@ -495,7 +540,7 @@ export default class PurchaseRequisitionLine extends Component {
                         <Label style={styles.label}>Approval Status</Label>
                         <Input
                           disabled
-                          value={this.state.lineData.Status.toString()}
+                          value={this.state.lineData.Status}
                           style={styles.content}
                         />
                       </Item>
@@ -574,6 +619,7 @@ export default class PurchaseRequisitionLine extends Component {
                     }}
                   >
                     <FlatList
+                      key={this.state.attachments}
                       data={this.state.attachments}
                       style={styles.flatList}
                       renderItem={this.renderItem}

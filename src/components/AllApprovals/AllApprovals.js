@@ -10,7 +10,8 @@ import {
 } from "react-native";
 import {
   getPRInfoPaging,
-  getAllPRInfo
+  SearchPRDetailsByPRNumber,
+  SearchPRDetailsByStatus
 } from "../../services/PurchaseRequisitionsService";
 import { ListItem, Icon, SearchBar } from "react-native-elements";
 import {
@@ -49,7 +50,8 @@ export default class PendingApprovals extends Component {
       showLoadMore: false,
       originalShowLoadMore: false,
       showSearchBar: false,
-      username: ""
+      username: "",
+      searchPRNumberVal: ""
     };
   }
 
@@ -67,7 +69,6 @@ export default class PendingApprovals extends Component {
   }
 
   toggleSearchBar = () => {
-    this.searchAllApprovals("");
     this.setState({
       showSearchBar: !this.state.showSearchBar
     });
@@ -75,7 +76,7 @@ export default class PendingApprovals extends Component {
 
   togglePressStatus = buttonType => {
     if (buttonType === "All") {
-      this.searchByStatus("");
+      this.searchByStatus("All");
       this.setState(
         { allFilterPressed: !this.state.allFilterPressed },
         function() {
@@ -101,7 +102,7 @@ export default class PendingApprovals extends Component {
               rejectedFilterPressed: false
             });
           } else {
-            this.searchByStatus("");
+            this.searchByStatus("All");
           }
         }
       );
@@ -118,7 +119,7 @@ export default class PendingApprovals extends Component {
               rejectedFilterPressed: false
             });
           } else {
-            this.searchByStatus("");
+            this.searchByStatus("All");
           }
         }
       );
@@ -135,7 +136,7 @@ export default class PendingApprovals extends Component {
               approvedFilterPressed: false
             });
           } else {
-            this.searchByStatus("");
+            this.searchByStatus("All");
           }
         }
       );
@@ -180,7 +181,9 @@ export default class PendingApprovals extends Component {
 
   onPressLine = (PRHeaderID, PRLineId, PRLineNo) => {
     this.props.navigation.navigate("PurchaseRequisitionLine", {
-      PRHeaderID, PRLineId, PRLineNo
+      PRHeaderID,
+      PRLineId,
+      PRLineNo
     });
   };
 
@@ -190,23 +193,30 @@ export default class PendingApprovals extends Component {
     });
   };
 
-  searchAllApprovals = value => {
+  updateSearchPRNumber = text => {
+    this.setState({
+      searchPRNumberVal: text
+    });
+  };
+
+  searchPRsByPRNumber = () => {
+    searchVal = this.state.searchPRNumberVal;
     if (this.state.originalShowLoadMore) {
-      value == ""
+      searchVal == ""
         ? this.setState({ showLoadMore: true })
         : this.setState({ showLoadMore: false });
     }
 
-    // get content (where all the data is) and filter it
-    //const filterData = this.state.content.filter(field => (field.PRNo.toLowerCase().startsWith(value.toLowerCase()) || field.PRDate.toLowerCase().startsWith(value.toLowerCase())));
-    const filterData = this.state.content.filter(
-      field =>
-        field.PRNumber.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
-        field.PR_Date.toLowerCase().indexOf(value.toLowerCase()) !== -1
-    );
-    // add the filteredContent to the respective state variable
-    const filteredContent = filterData;
-    this.setState({ filteredContent });
+    if (searchVal !== "") {
+      // get content (where all the data is) and filter it
+      //const filterData = this.state.content.filter(field => (field.PRNo.toLowerCase().startsWith(value.toLowerCase()) || field.PRDate.toLowerCase().startsWith(value.toLowerCase())));
+      SearchPRDetailsByPRNumber(searchVal, this.state.username).then(res => {
+        const filterData = JSON.parse(res.data);
+        // add the filteredContent to the respective state variable
+        const filteredContent = filterData;
+        this.setState({ filteredContent });
+      });
+    }
   };
 
   searchByStatus = value => {
@@ -216,14 +226,14 @@ export default class PendingApprovals extends Component {
         : this.setState({ showLoadMore: false });
     }
 
-    const filterData = this.state.content.filter(field =>
-      field.Status != null
-        ? field.Status.toLowerCase().indexOf(value.toLowerCase()) !== -1
-        : true
+    SearchPRDetailsByStatus(value.toLowerCase(), this.state.username).then(
+      res => {
+        const filterData = JSON.parse(res.data);
+        // add the filteredContent to the respective state variable
+        const filteredContent = filterData;
+        this.setState({ filteredContent });
+      }
     );
-    // add the filteredContent to the respective state variable
-    const filteredContent = filterData;
-    this.setState({ filteredContent });
   };
 
   renderHeader = (section, _, isActive) => {
@@ -277,7 +287,9 @@ export default class PendingApprovals extends Component {
             style={{
               paddingLeft: 20
             }}
-            onPress={() => this.onPressLine(section.ID, lineItem.ID, lineItem.PRLine)}
+            onPress={() =>
+              this.onPressLine(section.ID, lineItem.ID, lineItem.PRLine)
+            }
           />
         }
         hideChevron
@@ -401,7 +413,8 @@ export default class PendingApprovals extends Component {
               <Icon name="search" type="evilicon" />
               <Input
                 placeholder="Search All PRs"
-                onChangeText={text => this.searchAllApprovals(text)}
+                onChangeText={text => this.updateSearchPRNumber(text)}
+                onSubmitEditing={() => this.searchPRsByPRNumber()}
               />
               <Icon
                 name="close"

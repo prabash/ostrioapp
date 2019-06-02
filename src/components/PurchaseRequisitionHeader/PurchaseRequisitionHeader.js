@@ -343,11 +343,6 @@ export default class PurchaseRequisitionHeader extends Component {
                       style={[styles.content, { alignSelf: "flex-start" }]}
                     />
                   </Item>
-                  <Label
-                    style={[styles.label, { paddingLeft: 15, paddingTop: 10 }]}
-                  >
-                    Attachments
-                  </Label>
                 </Form>
               </ScrollView>
             </View>
